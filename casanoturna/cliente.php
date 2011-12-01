@@ -56,8 +56,8 @@
 		
 		<!-- CONTEUDO -->
 		<div id="Corpo">		
-			<div class="banner_secundario">
-				<img src="public/img/cliente.jpg" alt="" width="900" height="180" />
+			<div class="banner_secundario" align="center">
+				<img src="public/img/adicionar.jpg" alt="" width="900" height="180" />
 			</div>		
 			<div class="conteudo">
 				<div class="campo_conteudo"><h1>CLIENTES</h1>
