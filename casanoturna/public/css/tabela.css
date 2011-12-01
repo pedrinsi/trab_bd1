@@ -1,0 +1,60 @@
+table {
+	border-collapse: collapse;
+	width: 100%;
+	color: #707070;
+	margin-top: 15px;
+}
+
+table a {
+	color: #2ac0da;
+}
+
+table thead {
+	background: none repeat scroll 0 0 #dcd5e0;
+    height: 35px;
+    text-align: center;
+	font-size: 18px;
+	font-weight: normal;
+}
+
+table thead a {
+	color: #707070 !important;
+}
+
+table th {
+	padding: 0 10px;
+	height: 35px;
+	font-size: 14px;
+}
+
+table td {
+	padding: 0 10px;
+	height: 25px;
+	text-align: center;
+	font-size: 13px;
+}
+
+table .impar {
+	background: #dcd5e0;
+}
+
+table input[type="checkbox"] {
+	position: relative;
+	top: 3px;
+}
+
+table .nome {
+	width: 400px;
+}
+
+table .opcoes {
+	width: 60px;
+}
+
+table .data {
+	width: 150px;
+}
+
+table .esquerda {
+	text-align: left !important;
+}

@@ -1,0 +1,39 @@
+body {
+	font:62.5% "Trebuchet MS", Arial, Helvetica, sans-serif
+}
+
+.campo_conteudo {
+	margin:0 auto; width:760px
+}
+
+a {
+	color:#007FDB
+}
+
+h2 {
+	color:#008C00; font-size:3.5em; margin: 1em auto 0.3em; text-align:center
+}
+
+dl {
+	background: url(../img/pontilhado.gif) repeat-x 0 1.6em; margin:0 0 1em; overflow:auto; width:100%
+}
+
+dt, dd.price{
+	background-color:#fff; font-size:1.8em; font-weight:bold
+}
+
+dt {
+	color:#F70000; float:left; padding-right:3px
+}
+
+dd {
+	margin:0
+}
+
+dd.price {
+	color:#aaa; float:right; padding-left:3px
+}
+
+dd.ingredients {
+	color:#555; font:italic 1.2em Georgia,Times,sans-serif; float:left; padding:3px 0; width:100%
+}

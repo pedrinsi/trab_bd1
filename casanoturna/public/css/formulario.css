@@ -1,0 +1,65 @@
+#Corpo .conteudo .campo_conteudo form .cadastra
+ {
+	color: #606060;
+    float: left;
+    font-size: 14px;
+    margin: 8px 33px auto;
+    text-align: justify;
+    width: 550px;
+}
+
+#Corpo .conteudo .campo_conteudo form label {
+	color: #606060;
+	font-weight: bold;
+	font-size: 14px;
+	margin-left: 3px;
+}
+
+#Corpo .conteudo .campo_conteudo form .nome ,
+#Corpo .conteudo .campo_conteudo form .sobrenome,
+#Corpo .conteudo .campo_conteudo form .cpf,
+#Corpo .conteudo .campo_conteudo form .dt_nascimento,
+#Corpo .conteudo .campo_conteudo form .end_logradouro,
+#Corpo .conteudo .campo_conteudo form .end_numero,
+#Corpo .conteudo .campo_conteudo form .end_complemento,
+#Corpo .conteudo .campo_conteudo form .end_municipio,
+#Corpo .conteudo .campo_conteudo form .end_uf,
+#Corpo .conteudo .campo_conteudo form .end_cep,
+#Corpo .conteudo .campo_conteudo form .telefone
+{
+	background-image: url(../img/bg_input.png);
+	background-position: left -63px;
+	width: 269px;
+	display: block;
+	margin-bottom: 5px;
+	min-height: 43px;
+}
+
+#Corpo .conteudo .campo_conteudo form input[type="text"]{
+	border: medium none;
+    color: #FFFFFF;
+    font-size: 18px;
+    height: 35px;
+    line-height: 35px;
+    padding: 0 0 0 15px;
+    width: 259px;
+}
+
+#Corpo .conteudo .campo_conteudo form .submit {
+	background-image: url(../img/salvar.png);
+	line-height: 40px;
+	text-align: center;
+	color: #fff;
+	font-size: 14px;
+	font-weight: bold;
+	text-shadow: 1px 1px 1px #006496;
+	float: right;
+	display: block;
+	cursor: pointer;
+	margin: 0 283px;
+}
+
+#Corpo .conteudo .campo_conteudo form #salvar,
+#Corpo .conteudo .campo_conteudo form #cancelar {
+	width: 80px;
+}
