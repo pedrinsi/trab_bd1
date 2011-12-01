@@ -43,7 +43,7 @@
 		<!-- CONTEUDO -->
 		<div id="Corpo">		
 			<div class="banner_secundario" align="center">
-				<img src="public/img/adicionar.png" alt="" width="900" height="180" />
+				<img src="public/img/adicionar.png" alt="" height="180" />
 			</div>		
 			<div class="conteudo">
 				<div class="campo_conteudo">
