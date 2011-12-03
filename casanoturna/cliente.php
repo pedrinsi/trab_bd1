@@ -4,9 +4,21 @@
 	$conexao = new Conexao;
 	$conexao->open();
 	
+	if(isset($_GET['string'])) {	
+		$string = $_GET['string'];		
+	}
+	
+	$busca = (isset($string)) ? " WHERE a.nome LIKE '%$string%' " : "";
+	
 	$clientes = $conexao->result("
-		SELECT *
-		FROM cliente
+		SELECT 
+			c.nome as nome_clube,
+			b.id_clube,
+			a.*
+		FROM cliente as a
+		LEFT JOIN socio as b ON a.id = b.id_cliente
+		LEFT JOIN clube as c ON c.id = b.id_clube
+		$busca
 	");
 	
 	if((isset($_GET['deletar']))&&($_GET['deletar']=="true")) {
@@ -58,19 +70,19 @@
 					autoArrows:  false,                           // disable generation of arrow mark-up 
 					dropShadows: false                            // disable drop shadows 
 				});
-				
-				$('.busca').focus(function(){ 
-					if($(this).val() == 'Buscar...')
-					{
-					  $(this).val('');
-					}
-				});
+			
 			  
 				$('.busca').blur(function(){
 					if($(this).val() == '')
 					{
-					  $(this).val('Buscar...');
-					} 
+					  $(this).val('Buscando...');
+					  window.location = 'cliente.php';
+					}
+					else {
+						if ($(this).val()!="") {
+							window.location = 'cliente.php?string='+$(this).val();
+						}
+					}
 				});
 			});
 			
@@ -101,7 +113,7 @@
 						<form action="" class="busca">
 							<fieldset>
 								<span class="bg_busca">
-									<input type="text" value="Buscar..." class="busca" id="" />
+									<input type="text" value="" class="busca" id="" />
 								</span>
 								<input type="button" value="" id="" />
 							</fieldset>
@@ -128,7 +140,7 @@
 										<td><input type="checkbox" /></td>
 										<td><?=$cliente['id']?></td>
 										<td><?=$cliente['nome']?></td>
-										<td><a href="#">Não Cadastrado</a></td>
+										<td><a href="#"><?=$cliente['nome_clube']?></a></td>
 										<td>
 											<a href="cliente_form.php?i=<?=$cliente['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
 											<a href="#"><img src="public/img/icon_log.png" alt="" title="Log" width="16" height="16" />
@@ -140,7 +152,7 @@
 										<td><input type="checkbox" /></td>
 										<td><?=$cliente['id']?></td>
 										<td><?=$cliente['nome']?></td>
-										<td><a href="#">Não Cadastrado</a></td>
+										<td><a href="#"><?=$cliente['nome_clube']?></a></td>
 										<td>
 											<a href="cliente_form.php?i=<?=$cliente['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
 											<a href="#"><img src="public/img/icon_log.png" alt="" title="Log" width="16" height="16" />

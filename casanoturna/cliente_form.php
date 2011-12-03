@@ -16,8 +16,19 @@
 	$manipula->addCampo("cpf","","string");	 
 	
 	
-	$manipula->setAfterUpdate("cliente.php");
-	$manipula->setAfterInsert("cliente.php");
+	if((isset($_GET['c']))&&($_GET['c']==1)) {
+		$manipula->setAfterUpdate("clube_cachaca.php");
+		$manipula->setAfterInsert("clube_cachaca.php");
+	} elseif((isset($_GET['c']))&&($_GET['c']==2)) {
+		$manipula->setAfterUpdate("clube_vinho.php");
+		$manipula->setAfterInsert("clube_vinho.php");
+	} elseif((isset($_GET['c']))&&($_GET['c']==3)) {
+		$manipula->setAfterUpdate("clube_whisky.php");
+		$manipula->setAfterInsert("clube_whisky.php");
+	} else {
+		$manipula->setAfterUpdate("cliente.php");
+		$manipula->setAfterInsert("cliente.php");
+	}
 	
 	$manipula->execManipula();
 	

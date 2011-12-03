@@ -1,3 +1,41 @@
+<?php
+	include("public/lib/_conexao.php");
+
+	$conexao = new Conexao;
+	$conexao->open();
+	
+	if(isset($_GET['string'])) {	
+		$string = $_GET['string'];		
+	}
+	
+	$busca = (isset($string)) ? " AND a.nome LIKE '%$string%' " : "";
+	
+	$clientes = $conexao->result("
+		SELECT
+			b.id_clube,
+			a.*
+		FROM cliente as a
+		INNER JOIN socio as b ON a.id = b.id_cliente
+		WHERE b.id_clube = 2 $busca
+	");
+	
+	if((isset($_GET['deletar']))&&($_GET['deletar']=="true")) {
+	
+		$deleta_cliente = $conexao->execute("
+			DELETE FROM socio
+			WHERE id_cliente = ".$_GET['i']."
+		");
+?>
+<script type="text/javascript">
+	window.location = 'clube_whisky.php';
+</script>
+<?
+	
+	}
+	
+	$conexao->close();
+
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -31,20 +69,26 @@
 					dropShadows: false                            // disable drop shadows 
 				});
 				
-				$('.busca').focus(function(){ 
-					if($(this).val() == 'Buscar...')
-					{
-					  $(this).val('');
-					}
-				});
-			  
 				$('.busca').blur(function(){
 					if($(this).val() == '')
 					{
-					  $(this).val('Buscar...');
-					} 
+					  $(this).val('Buscando...');
+					  window.location = 'clube_whisky.php';
+					}
+					else {
+						if ($(this).val()!="") {
+							window.location = 'clube_whisky.php?string='+$(this).val();
+						}
+					}
 				});
 			});
+			
+			function deleta_cliente(id_cliente){
+					var confirma = confirm("deseja realmente desassociar este cliente?");
+					if(confirma) {
+						window.location = 'clube_whisky.php?deletar=true&i='+id_cliente;
+					}
+				}
 		</script>
 		
 	</head>
@@ -66,12 +110,12 @@
 						<form action="" class="busca">
 							<fieldset>
 								<span class="bg_busca">
-									<input type="text" value="Buscar..." class="busca" id="" />
+									<input type="text" value="" class="busca" id="" />
 								</span>
 								<input type="button" value="" id="" />
 							</fieldset>
 						</form>
-						<a href="#">Cadastrar cliente</a>
+						<a href="#">Associar cliente&nbsp;&nbsp;</a>
 					</div>
 
 					<form action="">
@@ -82,52 +126,38 @@
 										<th><input type="checkbox" /></th>
 										<th>ID</th>
 										<th>NOME</th>										
-										<th>SOBRENOME</th>										
-										<th>CPF</th>										
-										<th>OPÇÕES</th>
+										<th>CLUBE</th>
+										<th class="opcoes">OPÇÕES</th>
 									</tr>
-								</thead>
+								</thead>							
 								<tbody>
+									<?php foreach($clientes as $c => $cliente){
+										if($c%2==0) {?>
 									<tr>
 										<td><input type="checkbox" /></td>
-										<td>1</td>
-										<td>Tarcísio</td>										
-										<td>Fonseca Lima</td>										
-										<td>082.911.004-18</td>										
+										<td><?=$cliente['id']?></td>
+										<td><?=$cliente['nome']?></td>
+										<td><a href="#">Vinho</a></td>
 										<td>
-											<a href="#"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
-											<a href="#"><img src="public/img/icon_log.png" alt="" title="Log" width="16" height="16" />
-											<a href="#"><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
+											<a href="cliente_form.php?i=<?=$cliente['id']?>&c=<?=$cliente['id_clube']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" /></a>
+											<a href="#"><img src="public/img/icon_log.png" alt="" title="Log" width="16" height="16" /></a>
+											<a href="javascript:deleta_cliente(<?=$cliente['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" /></a>
 										</td>
 									</tr>
+									<?php } else { ?>
 									<tr class="impar">
 										<td><input type="checkbox" /></td>
-										<td>2</td>
-										<td>Tarcísio</td>	
-										<td>Fonseca Lima</td>	
-										<td>082.911.004-18</td>											
+										<td><?=$cliente['id']?></td>
+										<td><?=$cliente['nome']?></td>
+										<td><a href="#">Vinho</a></td>
 										<td>
-											<a href="#"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
-											<a href="#"><img src="public/img/icon_log.png" alt="" title="Log" width="16" height="16" />
-											<a href="#"><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
+											<a href="cliente_form.php?i=<?=$cliente['id']?>&c=<?=$cliente['id_clube']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" /></a>
+											<a href="#"><img src="public/img/icon_log.png" alt="" title="Log" width="16" height="16" /></a>
+											<a href="javascript:deleta_cliente(<?=$cliente['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" /></a>
 										</td>
 									</tr>
+									<? } } ?>
 								</tbody>
-								<tfoot>
-									<tr>
-										<td colspan="4">
-											<div class="paginacao">
-												<div><a href="#">&laquo;</a></div>
-												<div><a href="#">1</a></div>
-												<div>2</div>
-												<div><a href="#">3</a></div>
-												<div><a href="#">4</a></div>
-												<div><a href="#">5</a></div>
-												<div><a href="#">&raquo;</a></div>
-											</div>
-										</td>
-									</tr>
-								</tfoot>
 							</table>
 						</fieldset>
 					</form>
