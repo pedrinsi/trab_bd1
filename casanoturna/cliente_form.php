@@ -5,27 +5,21 @@
 	$conexao = new Conexao;
 	$conexao->open();
 	
+	$next_id = $conexao->result("SHOW TABLE STATUS LIKE 'cliente'");
+	$id_cliente = (isset($_GET['i'])) ? $_GET['i'] : $next_id[0]['Auto_increment'];
+	
 	$manipula = new Manipula;
 	$manipula->setTabela("cliente");
 	$manipula->setChave("id");	
 	
-	$manipula->addCampo("id","","nontxt");
 	$manipula->addCampo("nome","","string");
-	$manipula->addCampo("cpf","","string");
+	$manipula->addCampo("cpf","","string");	 
 	
 	
 	$manipula->setAfterUpdate("cliente.php");
 	$manipula->setAfterInsert("cliente.php");
 	
 	$manipula->execManipula();
-	
-	if(isset($_GET['i'])){
-		$id_cliente = $_GET['i'];
-	} else {
-		$id_cliente = "";
-	}
-	
-	
 	
 	
 	$conexao->close();
@@ -79,10 +73,8 @@
 			<div class="conteudo">
 				<div class="campo_conteudo">
 					<h1>Cadastro de cliente</h1>
-					<form action="cliente_form.php" method="post">
-						<div class="cadastra">						
-							<label for="id">Id</label>
-							<input class="nome" type="text" name="id" value="<?=$manipula->getValorCampo("id")?>"/>
+					<form action="" method="post">
+						<div class="cadastra">
 							
 							<label for="nome">Nome</label>
 							<input class="nome" type="text" name="nome" value="<?=$manipula->getValorCampo("nome")?>"/>
@@ -113,6 +105,8 @@
 							
 							<label for="telefone">Telefone</label>
 							<input class="telefone" type="text" name="telefone" value=""/>
+							
+							<input type="hidden" name="trigger" id="trigger" value="<?php if($manipula->mode=="e"){ echo "edita"; } else { echo "insere"; }?>"/>
 							
 							<input class="salvar" style="margin:0 104px auto;" type="image" src="public/img/salvar.png" value="Salvar" id="salvar"/>
 							<input class="cancelar" style="margin:0 -105px auto;" type="image" src="public/img/cancelar.png" value="Cancelar" id="cancelar"/>

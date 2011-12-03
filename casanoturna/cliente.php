@@ -9,6 +9,20 @@
 		FROM cliente
 	");
 	
+	if((isset($_GET['deletar']))&&($_GET['deletar']=="true")) {
+	
+		$deleta_cliente = $conexao->execute("
+			DELETE FROM cliente
+			WHERE id = ".$_GET['i']."
+		");
+?>
+<script type="text/javascript">
+	window.location = 'cliente.php';
+</script>
+<?
+	
+	}
+	
 	$conexao->close();
 
 ?>
@@ -59,6 +73,13 @@
 					} 
 				});
 			});
+			
+			function deleta_cliente(id_cliente){
+					var confirma = confirm("deseja realmente deletar este usuário ?");
+					if(confirma) {
+						window.location = 'cliente.php?deletar=true&i='+id_cliente;
+					}
+				} 
 		</script>
 		
 	</head>
@@ -66,7 +87,7 @@
 	<body>
 		
 		<!-- TOPO -->
-		<?php include("_topo.php"); ?>		
+			
 		
 		<!-- CONTEUDO -->
 		<div id="Corpo">		
@@ -99,9 +120,10 @@
 										<th>CLUBE</th>
 										<th class="opcoes">OPÇÕES</th>
 									</tr>
-								</thead>
+								</thead>							
 								<tbody>
-									<?php foreach($clientes as $c => $cliente){ ?>
+									<?php foreach($clientes as $c => $cliente){
+										if($c%2==0) {?>
 									<tr>
 										<td><input type="checkbox" /></td>
 										<td><?=$cliente['id']?></td>
@@ -110,26 +132,23 @@
 										<td>
 											<a href="cliente_form.php?i=<?=$cliente['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
 											<a href="#"><img src="public/img/icon_log.png" alt="" title="Log" width="16" height="16" />
-											<a href="#"><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
+											<a href="javascript:deleta_cliente(<?=$cliente['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
 										</td>
 									</tr>
-									<?php } ?>
+									<?php } else { ?>
+									<tr class="impar">
+										<td><input type="checkbox" /></td>
+										<td><?=$cliente['id']?></td>
+										<td><?=$cliente['nome']?></td>
+										<td><a href="#">Não Cadastrado</a></td>
+										<td>
+											<a href="cliente_form.php?i=<?=$cliente['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
+											<a href="#"><img src="public/img/icon_log.png" alt="" title="Log" width="16" height="16" />
+											<a href="javascript:deleta_cliente(<?=$cliente['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
+										</td>
+									</tr>
+									<? } } ?>
 								</tbody>
-								<tfoot>
-									<tr>
-										<td colspan="4">
-											<div class="paginacao">
-												<div><a href="#">&laquo;</a></div>
-												<div><a href="#">1</a></div>
-												<div>2</div>
-												<div><a href="#">3</a></div>
-												<div><a href="#">4</a></div>
-												<div><a href="#">5</a></div>
-												<div><a href="#">&raquo;</a></div>
-											</div>
-										</td>
-									</tr>
-								</tfoot>
 							</table>
 						</fieldset>
 					</form>
