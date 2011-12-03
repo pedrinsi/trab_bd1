@@ -7,27 +7,49 @@
 	if(isset($_GET['string'])) {	
 		$string = $_GET['string'];		
 	}
+	$id_clube = (isset($_GET['c'])) ? $_GET['c'] : ""; 
 	
-	$busca = (isset($string)) ? " AND a.nome LIKE '%$string%' " : "";
+	$busca = (isset($string)) ? " WHERE a.nome LIKE '%$string%' " : "";
 	
 	$clientes = $conexao->result("
-		SELECT
+		SELECT 
+			c.nome as nome_clube,
 			b.id_clube,
 			a.*
 		FROM cliente as a
-		INNER JOIN socio as b ON a.id = b.id_cliente
-		WHERE b.id_clube = 2 $busca
+		LEFT JOIN socio as b ON a.id = b.id_cliente
+		LEFT JOIN clube as c ON c.id = b.id_clube
+		$busca
 	");
 	
-	if((isset($_GET['deletar']))&&($_GET['deletar']=="true")) {
+	//ASSOCIAR UM CLIENTE A UM CLUBE
 	
-		$deleta_cliente = $conexao->execute("
-			DELETE FROM socio
-			WHERE id_cliente = ".$_GET['i']."
+	if((isset($_GET['c']))&&(isset($_GET['i']))) {
+		$id_cliente = $_GET['i'];
+		$id_clube = $_GET['c'];
+	
+		$associa_cliente = $conexao->execute("
+			INSERT INTO socio(
+				id_cliente,
+				id_clube
+			)
+			VALUES(
+				$id_cliente,
+				$id_clube
+			)
 		");
 ?>
 <script type="text/javascript">
-	window.location = 'clube_vinho.php';
+	var clube = <?=$id_clube?>;
+	if(clube==1){
+		window.location = 'clube_cachaca.php';
+	}
+	if(clube==2){
+		window.location = 'clube_vinho.php';
+	}
+	if(clube==3){
+		window.location = 'clube_whisky.php';
+	}
 </script>
 <?
 	
@@ -39,7 +61,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>Clube do Vinho</title>
+		<title>Casa Noturna</title>
 		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="description"  content="" />
@@ -52,6 +74,7 @@
 		
 		<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" type="text/css" href="public/css/padrao.css" />
+		<link rel="stylesheet" type="text/css" href="public/css/formulario.css" />
 		<link rel="stylesheet" type="text/css" href="public/css/tabela.css" />
 		
 		<script type="text/javascript" src="public/js/jquery-1.7.min.js"></script>
@@ -68,43 +91,30 @@
 					autoArrows:  false,                           // disable generation of arrow mark-up 
 					dropShadows: false                            // disable drop shadows 
 				});
-				
-				$('.busca').blur(function(){
-					if($(this).val() == '')
-					{
-					  $(this).val('Buscando...');
-					  window.location = 'clube_vinho.php';
-					}
-					else {
-						if ($(this).val()!="") {
-							window.location = 'clube_vinho.php?string='+$(this).val();
-						}
-					}
-				});
 			});
 			
-			function deleta_cliente(id_cliente){
-					var confirma = confirm("deseja realmente desassociar este cliente?");
+			function associa_cliente(id_clube,id_cliente){
+				var confirma = confirm("deseja asassociar este cliente?");
 					if(confirma) {
-						window.location = 'clube_vinho.php?deletar=true&i='+id_cliente;
+						window.location = 'clube_form.php?c='+id_clube+'&i='+id_cliente;
 					}
-				}
+			}
 		</script>
 		
 	</head>
 	
 	<body>
-	
+		
 		<!-- TOPO -->
 		<?php include("_topo.php"); ?>		
 		
 		<!-- CONTEUDO -->
 		<div id="Corpo">		
 			<div class="banner_secundario">
-				<img src="public/img/VINHO.jpg" alt="" width="900" height="180" />
+				<img src="public/img/casa noturna.jpg" alt="" width="900" height="180" />
 			</div>		
 			<div class="conteudo">
-				<div class="campo_conteudo"><h1>CLIENTES CLUBE VINHO</h1>
+				<div class="campo_conteudo"><h1>Associar Clientes</h1>
 
 					<div class="campo_botoes">
 						<form action="" class="busca">
@@ -115,46 +125,35 @@
 								<input type="button" value="" id="" />
 							</fieldset>
 						</form>
-						<a href="clube_form.php?c=2">Associar cliente&nbsp;&nbsp;</a>
 					</div>
 
 					<form action="">
 						<fieldset>
 							<table border="0">
 								<thead>
-									<tr>
-										<th><input type="checkbox" /></th>
-										<th>ID</th>
-										<th>NOME</th>										
-										<th>CLUBE</th>
-										<th class="opcoes">OPÇÕES</th>
+									<tr>										
+										<th>ID Cliente</th>
+										<th>Nome</th>
+										<th>CPF</th>
+										<th>Opçoes</th>
 									</tr>
 								</thead>							
 								<tbody>
 									<?php foreach($clientes as $c => $cliente){
 										if($c%2==0) {?>
 									<tr>
-										<td><input type="checkbox" /></td>
+										
 										<td><?=$cliente['id']?></td>
 										<td><?=$cliente['nome']?></td>
-										<td><a href="#">Vinho</a></td>
-										<td>
-											<a href="cliente_form.php?i=<?=$cliente['id']?>&c=<?=$cliente['id_clube']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" /></a>
-											<a href="#"><img src="public/img/icon_log.png" alt="" title="Log" width="16" height="16" /></a>
-											<a href="javascript:deleta_cliente(<?=$cliente['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" /></a>
-										</td>
+										<td><?=$cliente['cpf']?></td>
+										<td><a href="javascript:associa_cliente(<?=$id_clube?>,<?=$cliente['id']?>);"><img src="public/img/check.png" alt="" title="Adicionar" width="16" height="16" /></td>
 									</tr>
 									<?php } else { ?>
 									<tr class="impar">
-										<td><input type="checkbox" /></td>
 										<td><?=$cliente['id']?></td>
 										<td><?=$cliente['nome']?></td>
-										<td><a href="#">Vinho</a></td>
-										<td>
-											<a href="cliente_form.php?i=<?=$cliente['id']?>&c=<?=$cliente['id_clube']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" /></a>
-											<a href="#"><img src="public/img/icon_log.png" alt="" title="Log" width="16" height="16" /></a>
-											<a href="javascript:deleta_cliente(<?=$cliente['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" /></a>
-										</td>
+										<td><?=$cliente['cpf']?></td>
+										<td><a href="javascript:associa_cliente(<?=$id_clube?>,<?=$cliente['id']?>);"><img src="public/img/check.png" alt="" title="Adicionar" width="16" height="16" /></td>
 									</tr>
 									<? } } ?>
 								</tbody>

@@ -5,27 +5,18 @@
 	$conexao = new Conexao;
 	$conexao->open();
 	
+	$next_id = $conexao->result("SHOW TABLE STATUS LIKE 'cardapio'");
+	$id_cardapio = (isset($_GET['i'])) ? $_GET['i'] : $next_id[0]['Auto_increment'];
+	
 	$manipula = new Manipula;
-	$manipula->setTabela("cliente");
+	$manipula->setTabela("cardapio");
 	$manipula->setChave("id");	
 	
-	$manipula->addCampo("nome","","string");
-	$manipula->addCampo("cpf","","string");	 
-	
-	
-	if((isset($_GET['c']))&&($_GET['c']==1)) {
-		$manipula->setAfterUpdate("clube_cachaca.php");
-		$manipula->setAfterInsert("clube_cachaca.php");
-	} elseif((isset($_GET['c']))&&($_GET['c']==2)) {
-		$manipula->setAfterUpdate("clube_vinho.php");
-		$manipula->setAfterInsert("clube_vinho.php");
-	} elseif((isset($_GET['c']))&&($_GET['c']==3)) {
-		$manipula->setAfterUpdate("clube_whisky.php");
-		$manipula->setAfterInsert("clube_whisky.php");
-	} else {
-		$manipula->setAfterUpdate("cliente.php");
-		$manipula->setAfterInsert("cliente.php");
-	}
+	$manipula->addCampo("descricao","","string");
+
+
+	$manipula->setAfterUpdate("cardapio.php");
+	$manipula->setAfterInsert("cardapio.php");	
 	
 	$manipula->execManipula();
 	
@@ -35,7 +26,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>Cadastro de Cliente</title>
+		<title>Cadastro de Cardapio</title>
 		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="description"  content="" />
@@ -80,39 +71,19 @@
 			</div>		
 			<div class="conteudo">
 				<div class="campo_conteudo">
-					<h1>Cadastro de cliente</h1>
+					<h1>Cadastro de Cardapio</h1>
 					<form action="" method="post">
 						<div class="cadastra">
 							
-							<label for="nome">Nome</label>
-							<input class="nome" type="text" name="nome" value="<?=$manipula->getValorCampo("nome")?>"/>
+							<label for="descricao">Descrição</label>
+							<input class="nome" type="text" name="descricao" value="<?=$manipula->getValorCampo("descricao")?>"/>
 							
-							<label for="cpf">CPF</label>
-							<input class="cpf" type="text" name="cpf" value="<?=$manipula->getValorCampo("cpf")?>"/>
-							
-							<label for="dt_nascimento">Data de Nascimento</label>
-							<input class="dt_nascimento" type="text" name="dt_nascimento" value=""/>
-							
-							<label for="end_logradouro">Logradouro</label>
-							<input class="end_logradouro" type="text" name="end_logradouro" value=""/>
-							
-							<label for="end_numero">Número</label>
-							<input class="end_numero" type="text" name="end_numero" value=""/>
-							
-							<label for="end_complemento">Complemento</label>
-							<input class="end_complemento" type="text" name="end_complemento" value=""/>
-							
-							<label for="end_municipio">Munícipio</label>
-							<input class="end_municipio" type="text" name="end_municipio" value=""/>
-							
-							<label for="end_uf">UF</label>
-							<input class="end_uf" type="text" name="end_uf" value=""/>
-							
-							<label for="end_cep">CEP</label>
-							<input class="end_cep" type="text" name="end_cep" value=""/>
-							
-							<label for="telefone">Telefone</label>
-							<input class="telefone" type="text" name="telefone" value=""/>
+							<div>
+								<p>
+								Listagem de bebidas e Comidas para inserir no cardapio!!
+								Insert no item cardapio!
+								</p>
+							</div>
 							
 							<input type="hidden" name="trigger" id="trigger" value="<?php if($manipula->mode=="e"){ echo "edita"; } else { echo "insere"; }?>"/>
 							

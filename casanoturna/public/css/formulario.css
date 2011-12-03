@@ -25,7 +25,13 @@
 #Corpo .conteudo .campo_conteudo form .end_municipio,
 #Corpo .conteudo .campo_conteudo form .end_uf,
 #Corpo .conteudo .campo_conteudo form .end_cep,
-#Corpo .conteudo .campo_conteudo form .telefone
+#Corpo .conteudo .campo_conteudo form .telefone,
+#Corpo .conteudo .campo_conteudo form .tema,
+#Corpo .conteudo .campo_conteudo form .lugares,
+#Corpo .conteudo .campo_conteudo form .numero,
+#Corpo .conteudo .campo_conteudo form .fornecedor,
+#Corpo .conteudo .campo_conteudo form .descricao
+
 {
 	background-image: url(../img/bg_input.png);
 	background-position: left -63px;

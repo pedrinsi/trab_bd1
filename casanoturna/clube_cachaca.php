@@ -115,7 +115,7 @@
 								<input type="button" value="" id="" />
 							</fieldset>
 						</form>
-						<a href="clube_cachaca_form.php">Associar cliente&nbsp;&nbsp;</a>
+						<a href="clube_form.php?c=1">Associar cliente&nbsp;&nbsp;</a>
 					</div>
 
 					<form action="">

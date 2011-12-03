@@ -129,6 +129,7 @@
 										<th><input type="checkbox" /></th>
 										<th>ID</th>
 										<th>NOME</th>										
+										<th>CPF</th>										
 										<th>CLUBE</th>
 										<th class="opcoes">OPÇÕES</th>
 									</tr>
@@ -140,6 +141,7 @@
 										<td><input type="checkbox" /></td>
 										<td><?=$cliente['id']?></td>
 										<td><?=$cliente['nome']?></td>
+										<td><?=$cliente['cpf']?></td>
 										<td><a href="#"><?=$cliente['nome_clube']?></a></td>
 										<td>
 											<a href="cliente_form.php?i=<?=$cliente['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
@@ -152,6 +154,7 @@
 										<td><input type="checkbox" /></td>
 										<td><?=$cliente['id']?></td>
 										<td><?=$cliente['nome']?></td>
+										<td><?=$cliente['cpf']?></td>
 										<td><a href="#"><?=$cliente['nome_clube']?></a></td>
 										<td>
 											<a href="cliente_form.php?i=<?=$cliente['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />

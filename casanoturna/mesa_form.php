@@ -5,27 +5,21 @@
 	$conexao = new Conexao;
 	$conexao->open();
 	
+	$next_id = $conexao->result("SHOW TABLE STATUS LIKE 'mesa'");
+	$id_cliente = (isset($_GET['i'])) ? $_GET['i'] : $next_id[0]['Auto_increment'];
+	
 	$manipula = new Manipula;
-	$manipula->setTabela("cliente");
+	$manipula->setTabela("mesa");
 	$manipula->setChave("id");	
 	
-	$manipula->addCampo("nome","","string");
-	$manipula->addCampo("cpf","","string");	 
+	$manipula->addCampo("tema","","string");
+	$manipula->addCampo("numero","","nontxt");	 
+	$manipula->addCampo("lugares","","nontxt");
 	
 	
-	if((isset($_GET['c']))&&($_GET['c']==1)) {
-		$manipula->setAfterUpdate("clube_cachaca.php");
-		$manipula->setAfterInsert("clube_cachaca.php");
-	} elseif((isset($_GET['c']))&&($_GET['c']==2)) {
-		$manipula->setAfterUpdate("clube_vinho.php");
-		$manipula->setAfterInsert("clube_vinho.php");
-	} elseif((isset($_GET['c']))&&($_GET['c']==3)) {
-		$manipula->setAfterUpdate("clube_whisky.php");
-		$manipula->setAfterInsert("clube_whisky.php");
-	} else {
-		$manipula->setAfterUpdate("cliente.php");
-		$manipula->setAfterInsert("cliente.php");
-	}
+	$manipula->setAfterUpdate("mesa.php");
+	$manipula->setAfterInsert("mesa.php");
+	
 	
 	$manipula->execManipula();
 	
@@ -35,7 +29,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>Cadastro de Cliente</title>
+		<title>Cadastro de Mesas</title>
 		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="description"  content="" />
@@ -80,40 +74,19 @@
 			</div>		
 			<div class="conteudo">
 				<div class="campo_conteudo">
-					<h1>Cadastro de cliente</h1>
+					<h1>Cadastro de Mesas</h1>
 					<form action="" method="post">
 						<div class="cadastra">
 							
-							<label for="nome">Nome</label>
-							<input class="nome" type="text" name="nome" value="<?=$manipula->getValorCampo("nome")?>"/>
+							<label for="tema">Tema</label>
+							<input class="tema" type="text" name="tema" value="<?=$manipula->getValorCampo("nome")?>"/>
 							
-							<label for="cpf">CPF</label>
-							<input class="cpf" type="text" name="cpf" value="<?=$manipula->getValorCampo("cpf")?>"/>
+							<label for="lugares">Lugares</label>
+							<input class="lugares" type="text" name="lugares" value="<?=$manipula->getValorCampo("lugares")?>"/>
 							
-							<label for="dt_nascimento">Data de Nascimento</label>
-							<input class="dt_nascimento" type="text" name="dt_nascimento" value=""/>
-							
-							<label for="end_logradouro">Logradouro</label>
-							<input class="end_logradouro" type="text" name="end_logradouro" value=""/>
-							
-							<label for="end_numero">Número</label>
-							<input class="end_numero" type="text" name="end_numero" value=""/>
-							
-							<label for="end_complemento">Complemento</label>
-							<input class="end_complemento" type="text" name="end_complemento" value=""/>
-							
-							<label for="end_municipio">Munícipio</label>
-							<input class="end_municipio" type="text" name="end_municipio" value=""/>
-							
-							<label for="end_uf">UF</label>
-							<input class="end_uf" type="text" name="end_uf" value=""/>
-							
-							<label for="end_cep">CEP</label>
-							<input class="end_cep" type="text" name="end_cep" value=""/>
-							
-							<label for="telefone">Telefone</label>
-							<input class="telefone" type="text" name="telefone" value=""/>
-							
+							<label for="numero">Numero</label>
+							<input class="numero" type="text" name="numero" value="<?=$manipula->getValorCampo("numero")?>"/>
+						
 							<input type="hidden" name="trigger" id="trigger" value="<?php if($manipula->mode=="e"){ echo "edita"; } else { echo "insere"; }?>"/>
 							
 							<input class="salvar" style="margin:0 104px auto;" type="image" src="public/img/salvar.png" value="Salvar" id="salvar"/>

@@ -8,26 +8,24 @@
 		$string = $_GET['string'];		
 	}
 	
-	$busca = (isset($string)) ? " AND a.nome LIKE '%$string%' " : "";
+	$busca = (isset($string)) ? " WHERE a.descricao LIKE '%$string%' " : "";
 	
-	$clientes = $conexao->result("
-		SELECT
-			b.id_clube,
-			a.*
-		FROM cliente as a
-		INNER JOIN socio as b ON a.id = b.id_cliente
-		WHERE b.id_clube = 2 $busca
+	$lotes = $conexao->result("
+		SELECT 
+			*
+		FROM lote as a
+		$busca
 	");
 	
 	if((isset($_GET['deletar']))&&($_GET['deletar']=="true")) {
 	
 		$deleta_cliente = $conexao->execute("
-			DELETE FROM socio
-			WHERE id_cliente = ".$_GET['i']."
+			DELETE FROM lote
+			WHERE id = ".$_GET['i']."
 		");
 ?>
 <script type="text/javascript">
-	window.location = 'clube_vinho.php';
+	window.location = 'lote.php';
 </script>
 <?
 	
@@ -39,7 +37,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>Clube do Vinho</title>
+		<title>Lotes</title>
 		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="description"  content="" />
@@ -68,43 +66,44 @@
 					autoArrows:  false,                           // disable generation of arrow mark-up 
 					dropShadows: false                            // disable drop shadows 
 				});
-				
+			
+			  
 				$('.busca').blur(function(){
 					if($(this).val() == '')
 					{
 					  $(this).val('Buscando...');
-					  window.location = 'clube_vinho.php';
+					  window.location = 'lote.php';
 					}
 					else {
 						if ($(this).val()!="") {
-							window.location = 'clube_vinho.php?string='+$(this).val();
+							window.location = 'lote.php?string='+$(this).val();
 						}
 					}
 				});
 			});
 			
-			function deleta_cliente(id_cliente){
-					var confirma = confirm("deseja realmente desassociar este cliente?");
+			function deleta_lote(id_lote){
+					var confirma = confirm("deseja realmente deletar este usuário ?");
 					if(confirma) {
-						window.location = 'clube_vinho.php?deletar=true&i='+id_cliente;
+						window.location = 'lote.php?deletar=true&i='+id_lote;
 					}
-				}
+				} 
 		</script>
 		
 	</head>
 	
 	<body>
-	
+		
 		<!-- TOPO -->
-		<?php include("_topo.php"); ?>		
+		<?php include("_topo.php"); ?>	
 		
 		<!-- CONTEUDO -->
 		<div id="Corpo">		
-			<div class="banner_secundario">
-				<img src="public/img/VINHO.jpg" alt="" width="900" height="180" />
+			<div class="banner_secundario" align="center">
+				<img src="public/img/casa noturna.jpg" alt="" width="900" height="180" />
 			</div>		
 			<div class="conteudo">
-				<div class="campo_conteudo"><h1>CLIENTES CLUBE VINHO</h1>
+				<div class="campo_conteudo"><h1>LOTES</h1>
 
 					<div class="campo_botoes">
 						<form action="" class="busca">
@@ -115,7 +114,7 @@
 								<input type="button" value="" id="" />
 							</fieldset>
 						</form>
-						<a href="clube_form.php?c=2">Associar cliente&nbsp;&nbsp;</a>
+						<a href="lote_form.php">Cadastrar lote</a>
 					</div>
 
 					<form action="">
@@ -125,35 +124,33 @@
 									<tr>
 										<th><input type="checkbox" /></th>
 										<th>ID</th>
-										<th>NOME</th>										
-										<th>CLUBE</th>
+										<th>DESCRICAO</th>										
+										<th>FORNECEDOR</th>
 										<th class="opcoes">OPÇÕES</th>
 									</tr>
 								</thead>							
 								<tbody>
-									<?php foreach($clientes as $c => $cliente){
+									<?php foreach($lotes as $c => $linha){
 										if($c%2==0) {?>
 									<tr>
 										<td><input type="checkbox" /></td>
-										<td><?=$cliente['id']?></td>
-										<td><?=$cliente['nome']?></td>
-										<td><a href="#">Vinho</a></td>
+										<td><?=$linha['id']?></td>
+										<td><?=$linha['descricao']?></td>
+										<td><?=$linha['fornecedor']?></td>
 										<td>
-											<a href="cliente_form.php?i=<?=$cliente['id']?>&c=<?=$cliente['id_clube']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" /></a>
-											<a href="#"><img src="public/img/icon_log.png" alt="" title="Log" width="16" height="16" /></a>
-											<a href="javascript:deleta_cliente(<?=$cliente['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" /></a>
+											<a href="lote_form.php?i=<?=$linha['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
+											<a href="javascript:deleta_lote(<?=$linha['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
 										</td>
 									</tr>
 									<?php } else { ?>
 									<tr class="impar">
-										<td><input type="checkbox" /></td>
-										<td><?=$cliente['id']?></td>
-										<td><?=$cliente['nome']?></td>
-										<td><a href="#">Vinho</a></td>
+									<td><input type="checkbox" /></td>
+										<td><?=$linha['id']?></td>
+										<td><?=$linha['descricao']?></td>
+										<td><?=$linha['fornecedor']?></td>
 										<td>
-											<a href="cliente_form.php?i=<?=$cliente['id']?>&c=<?=$cliente['id_clube']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" /></a>
-											<a href="#"><img src="public/img/icon_log.png" alt="" title="Log" width="16" height="16" /></a>
-											<a href="javascript:deleta_cliente(<?=$cliente['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" /></a>
+											<a href="lote_form.php?i=<?=$linha['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
+											<a href="javascript:deleta_lote(<?=$linha['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
 										</td>
 									</tr>
 									<? } } ?>
