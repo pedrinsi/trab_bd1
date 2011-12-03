@@ -43,7 +43,7 @@
 		<!-- CONTEUDO -->
 		<div id="Corpo">		
 			<div class="banner_secundario">
-				<img src="public/img/comida.jpg" alt="" width="900" height="180" />
+				<img src="public/img/casa noturna.jpg" alt="" width="900" height="180" />
 			</div>		
 			<div class="conteudo">
 				<div class="campo_conteudo">

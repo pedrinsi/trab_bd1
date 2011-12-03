@@ -14,6 +14,7 @@
 		
 		<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" type="text/css" href="public/css/padrao.css" />
+		<link rel="stylesheet" type="text/css" href="public/css/tabela.css" />
 		
 		<script type="text/javascript" src="public/js/jquery-1.7.min.js"></script>
 		<script type="text/javascript" src="public/js/superfish.js"></script>
@@ -45,7 +46,8 @@
 				<img src="public/img/casa noturna.jpg" alt="" width="900" height="180" />
 			</div>		
 			<div class="conteudo">
-				<div class="campo_conteudo"></div>
+			
+				<div class="campo_conteudo"><h1>CONTA</h1></div>
 			</div>
 		</div>
 		

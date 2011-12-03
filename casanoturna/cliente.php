@@ -87,12 +87,12 @@
 	<body>
 		
 		<!-- TOPO -->
-			
+		<?php include("_topo.php"); ?>	
 		
 		<!-- CONTEUDO -->
 		<div id="Corpo">		
 			<div class="banner_secundario" align="center">
-				<img src="public/img/adicionar.jpg" alt="" width="900" height="180" />
+				<img src="public/img/casa noturna.jpg" alt="" width="900" height="180" />
 			</div>		
 			<div class="conteudo">
 				<div class="campo_conteudo"><h1>CLIENTES</h1>
