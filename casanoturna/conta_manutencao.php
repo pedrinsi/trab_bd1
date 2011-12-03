@@ -8,24 +8,45 @@
 		$string = $_GET['string'];		
 	}
 	
-	$busca = (isset($string)) ? " WHERE a.tema LIKE '%$string%' " : "";
+	$setSituacao = (($_GET['filter']) != -1) ? "WHERE situacao = ".$_GET['filter']." " : "";
+	$busca = "";
 	
-	$mesas = $conexao->result("
+	if((isset($string))){
+		if($setSituacao != "") {
+		$busca = " WHERE a.id LIKE '%$string%' ";
+		}
+		else {
+		$busca =" AND a.id LIKE '%$string%' ";
+		}
+	}
+	//$busca = (isset($string)) ? " WHERE a.id LIKE '%$string%' " : "";
+	
+	$contas = $conexao->result("
 		SELECT 
-			*
-		FROM mesa as a
+			a.id,
+			a.id_cliente,
+			a.id_mesa,
+			a.dt_abertura,
+			a.situacao,
+			b.nome,
+			c.tema
+		FROM conta as a
+		LEFT JOIN cliente b ON b.id = a.id_cliente
+		LEFT JOIN mesa c ON c.id = a.id_mesa
+		$setSituacao
 		$busca
+		
 	");
 	
 	if((isset($_GET['deletar']))&&($_GET['deletar']=="true")) {
 	
-		$deleta_mesa = $conexao->execute("
-			DELETE FROM mesa
+		$deleta_conta = $conexao->execute("
+			DELETE FROM conta
 			WHERE id = ".$_GET['i']."
 		");
 ?>
 <script type="text/javascript">
-	window.location = 'mesa.php';
+	window.location = 'conta_manutencao.php';
 </script>
 <?
 	
@@ -37,7 +58,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>Mesas</title>
+		<title>Contas</title>
 		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="description"  content="" />
@@ -72,22 +93,26 @@
 					if($(this).val() == '')
 					{
 					  $(this).val('Buscando...');
-					  window.location = 'mesa.php';
+					  window.location = 'conta_manutencao.php';
 					}
 					else {
 						if ($(this).val()!="") {
-							window.location = 'mesa.php?string='+$(this).val();
+							window.location = 'conta_manutencao.php?string='+$(this).val();
 						}
 					}
 				});
 			});
 			
-			function deleta_mesa(id_mesa){
+			function deleta_conta(id_conta){
 					var confirma = confirm("deseja realmente deletar este usuário ?");
 					if(confirma) {
-						window.location = 'mesa.php?deletar=true&i='+id_mesa;
+						window.location = 'conta_manutencao.php?deletar=true&i='+id_conta;
 					}
 				} 
+			function filter(value) {
+				window.location = 'conta_manutencao.php?filter='+value;
+			}			
+				
 		</script>
 		
 	</head>
@@ -103,7 +128,7 @@
 				<img src="public/img/casa noturna.jpg" alt="" width="900" height="180" />
 			</div>		
 			<div class="conteudo">
-				<div class="campo_conteudo"><h1>MESAS</h1>
+				<div class="campo_conteudo"><h1>CONTAS</h1>
 
 					<div class="campo_botoes">
 						<form action="" class="busca">
@@ -114,7 +139,14 @@
 								<input type="button" value="" id="" />
 							</fieldset>
 						</form>
-						<a href="mesa_form.php">Cadastrar mesa</a>
+							
+						<select style="width:150px; text-align:center;margin-left:180px;" onChange="filter(this.value);">
+							<option value="-1" >TODAS AS CONTAS</option>
+							<option value="1" <?if($_GET['filter'] == 1) { ?> selected <?} ?> > Abertas</option> 
+							<option value="0" <?if($_GET['filter'] == 0) { ?> selected <?} ?>> Fechadas</option>	
+						</select>
+						
+						<a href="conta_form.php">Abrir Conta</a>
 					</div>
 
 					<form action="">
@@ -124,36 +156,54 @@
 									<tr>
 										<th><input type="checkbox" /></th>
 										<th>ID</th>
-										<th>NUMERO</th>										
-										<th>TEMA</th>
-										<th>LUGARES</th>
+										<th>CLIENTE</th>										
+										<th>MESA</th>
+										<th>SITUAÇÃO</th>
 										<th class="opcoes">OPÇÕES</th>
 									</tr>
 								</thead>							
 								<tbody>
-									<?php foreach($mesas as $c => $mesa){
+									<?php foreach($contas as $c => $linha){
 										if($c%2==0) {?>
 									<tr>
 										<td><input type="checkbox" /></td>
-										<td><?=$mesa['id']?></td>
-										<td><?=$mesa['numero']?></td>
-										<td><?=$mesa['tema']?></td>
-										<td><?=$mesa['lugares']?></td>
+										<td><?=$linha['id']?></td>
+										<td><?=$linha['nome']?></td>
+										<td><?=$linha['tema']?></td>
+										<td><?
+											if($linha['situacao'] == 0){
+											?>
+											<span style="color:green">Fechada</span>	
+											<?
+											} else {
+											?>
+											<span style="color:red">Aberta</span>	
+											<?}?>											
+										</td>
 										<td>
-											<a href="mesa_form.php?i=<?=$mesa['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
-											<a href="javascript:deleta_mesa(<?=$mesa['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
+											<a href="conta_inserir_itens.php?i=<?=$linha['id']?>"><img src="public/img/icon_editar.png" alt="" title="Inserir Itens" width="16" height="16" />
+											<a href="javascript:deleta_conta(<?=$linha['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
 										</td>
 									</tr>
 									<?php } else { ?>
 									<tr class="impar">
 									<td><input type="checkbox" /></td>
-										<td><?=$mesa['id']?></td>
-										<td><?=$mesa['numero']?></td>
-										<td><?=$mesa['tema']?></td>
-										<td><?=$mesa['lugares']?></td>
+										<td><?=$linha['id']?></td>
+										<td><?=$linha['nome']?></td>
+										<td><?=$linha['tema']?></td>
+										<td><?
+											if($linha['situacao'] == 0){
+											?>
+											<span style="color:green">Fechada</span>	
+											<?
+											} else {
+											?>
+											<span style="color:red">Aberta</span>	
+											<?}?>											
+										</td>
 										<td>
-											<a href="mesa_form.php?i=<?=$mesa['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
-											<a href="javascript:deleta_mesa(<?=$mesa['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
+											<a href="conta_inserir_itens.php?i=<?=$linha['id']?>"><img src="public/img/icon_editar.png" alt="" title="Inserir Itens" width="16" height="16" />
+											<a href="javascript:deleta_conta(<?=$linha['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
 										</td>
 									</tr>
 									<? } } ?>

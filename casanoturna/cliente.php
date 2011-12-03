@@ -87,11 +87,11 @@
 			});
 			
 			function deleta_cliente(id_cliente){
-					var confirma = confirm("deseja realmente deletar este usuário ?");
-					if(confirma) {
-						window.location = 'cliente.php?deletar=true&i='+id_cliente;
-					}
-				} 
+				var confirma = confirm("deseja realmente deletar este usuário ?");
+				if(confirma) {
+					window.location = 'cliente.php?deletar=true&i='+id_cliente;
+				}
+			} 
 		</script>
 		
 	</head>

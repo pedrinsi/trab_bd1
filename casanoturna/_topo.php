@@ -25,7 +25,13 @@
 				</ul>
 			</li>
 			<li><a href="cliente.php">Clientes</a></li>
-			<li><a href="conta.php">Conta</a></li>
+			<li><a href="conta.php">Conta</a>
+				<ul class="submenu">
+					
+					<li><a href="conta_manutencao.php?filter=-1">Manutenção</a></li>
+					<li><a href="conta_relatorio.php">Relatorios</a></li>
+				</ul>
+			</li>
 			<li>
 				<a href="#">Estoque</a>
 				<ul class="submenu">

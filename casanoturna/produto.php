@@ -4,40 +4,33 @@
 	$conexao = new Conexao;
 	$conexao->open();
 	
-	if(isset($_GET['string'])) {	
-		$string = $_GET['string'];		
-	}
-	
-	$busca = (isset($string)) ? " WHERE a.tema LIKE '%$string%' " : "";
-	
-	$mesas = $conexao->result("
-		SELECT 
-			*
-		FROM mesa as a
-		$busca
-	");
+		$produtos = $conexao->result("
+			SELECT 
+				b.fornecedor,
+				a.*
+			FROM produto as a
+			INNER JOIN lote as b on b.id = a.id_lote
+		");
 	
 	if((isset($_GET['deletar']))&&($_GET['deletar']=="true")) {
 	
-		$deleta_mesa = $conexao->execute("
-			DELETE FROM mesa
+		$deleta_produto = $conexao->execute("
+			DELETE FROM produto
 			WHERE id = ".$_GET['i']."
 		");
 ?>
 <script type="text/javascript">
-	window.location = 'mesa.php';
+	window.location = 'produto.php';
 </script>
 <?
 	
 	}
-	
 	$conexao->close();
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>Mesas</title>
+		<title>Casa Noturna</title>
 		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="description"  content="" />
@@ -66,28 +59,14 @@
 					autoArrows:  false,                           // disable generation of arrow mark-up 
 					dropShadows: false                            // disable drop shadows 
 				});
-			
-			  
-				$('.busca').blur(function(){
-					if($(this).val() == '')
-					{
-					  $(this).val('Buscando...');
-					  window.location = 'mesa.php';
-					}
-					else {
-						if ($(this).val()!="") {
-							window.location = 'mesa.php?string='+$(this).val();
-						}
-					}
-				});
 			});
 			
-			function deleta_mesa(id_mesa){
-					var confirma = confirm("deseja realmente deletar este usuário ?");
-					if(confirma) {
-						window.location = 'mesa.php?deletar=true&i='+id_mesa;
-					}
-				} 
+			function deleta_produto(id){
+				var confirma = confirm("deseja realmente deletar este usuário ?");
+				if(confirma) {
+					window.location = 'produto.php?deletar=true&i='+id;
+				}
+			}
 		</script>
 		
 	</head>
@@ -95,26 +74,18 @@
 	<body>
 		
 		<!-- TOPO -->
-		<?php include("_topo.php"); ?>	
+		<?php include("_topo.php"); ?>		
 		
 		<!-- CONTEUDO -->
 		<div id="Corpo">		
-			<div class="banner_secundario" align="center">
+			<div class="banner_secundario">
 				<img src="public/img/casa noturna.jpg" alt="" width="900" height="180" />
 			</div>		
 			<div class="conteudo">
-				<div class="campo_conteudo"><h1>MESAS</h1>
+				<div class="campo_conteudo"><h1>PRODUTOS</h1>
 
 					<div class="campo_botoes">
-						<form action="" class="busca">
-							<fieldset>
-								<span class="bg_busca">
-									<input type="text" value="" class="busca" id="" />
-								</span>
-								<input type="button" value="" id="" />
-							</fieldset>
-						</form>
-						<a href="mesa_form.php">Cadastrar mesa</a>
+						<a href="produto_form.php">Cadastrar Produto</a>
 					</div>
 
 					<form action="">
@@ -122,38 +93,35 @@
 							<table border="0">
 								<thead>
 									<tr>
-										<th><input type="checkbox" /></th>
 										<th>ID</th>
-										<th>NUMERO</th>										
-										<th>TEMA</th>
-										<th>LUGARES</th>
+										<th>NOME</th>
+										<th>Valor Unit</th>
+										<th>Fornecedor</th>
 										<th class="opcoes">OPÇÕES</th>
 									</tr>
 								</thead>							
 								<tbody>
-									<?php foreach($mesas as $c => $mesa){
-										if($c%2==0) {?>
+								<?php foreach($produtos as $p => $produto){
+										if($p%2==0) { 	?>
 									<tr>
-										<td><input type="checkbox" /></td>
-										<td><?=$mesa['id']?></td>
-										<td><?=$mesa['numero']?></td>
-										<td><?=$mesa['tema']?></td>
-										<td><?=$mesa['lugares']?></td>
+										<td><?=$produto['id']?></td> 
+										<td><?=$produto['descricao']?></td>
+										<td><?=$produto['valor_unidade']?></td>
+										<td><?=$produto['fornecedor']?></td>
 										<td>
-											<a href="mesa_form.php?i=<?=$mesa['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
-											<a href="javascript:deleta_mesa(<?=$mesa['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
+											<a href="produto_form.php?i=<?=$produto['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
+											<a href="#" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
 										</td>
 									</tr>
 									<?php } else { ?>
 									<tr class="impar">
-									<td><input type="checkbox" /></td>
-										<td><?=$mesa['id']?></td>
-										<td><?=$mesa['numero']?></td>
-										<td><?=$mesa['tema']?></td>
-										<td><?=$mesa['lugares']?></td>
+										<td><?=$produto['id']?></td> 
+										<td><?=$produto['descricao']?></td>
+										<td><?=$produto['valor_unidade']?></td>										
+										<td><?=$produto['fornecedor']?></td>										
 										<td>
-											<a href="mesa_form.php?i=<?=$mesa['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
-											<a href="javascript:deleta_mesa(<?=$mesa['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
+											<a href="produto_form.php?i=<?=$produto['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
+											<a href="javascript:deleta_produto(<?=$produto['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
 										</td>
 									</tr>
 									<? } } ?>

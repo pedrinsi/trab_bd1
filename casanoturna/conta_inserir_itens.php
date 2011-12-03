@@ -8,24 +8,28 @@
 		$string = $_GET['string'];		
 	}
 	
-	$busca = (isset($string)) ? " WHERE a.tema LIKE '%$string%' " : "";
+	$busca = (isset($string)) ? " WHERE a.id LIKE '%$string%' " : "";
 	
-	$mesas = $conexao->result("
+	$contas = $conexao->result("
 		SELECT 
-			*
-		FROM mesa as a
+			*,
+			b.nome,
+			c.tema
+		FROM conta as a
+		INNER JOIN cliente b ON b.id = a.id_cliente
+		INNER JOIN mesa c ON c.id = a.id_mesa
 		$busca
 	");
 	
 	if((isset($_GET['deletar']))&&($_GET['deletar']=="true")) {
 	
-		$deleta_mesa = $conexao->execute("
-			DELETE FROM mesa
+		$deleta_conta = $conexao->execute("
+			DELETE FROM conta
 			WHERE id = ".$_GET['i']."
 		");
 ?>
 <script type="text/javascript">
-	window.location = 'mesa.php';
+	window.location = 'conta_manutencao.php';
 </script>
 <?
 	
@@ -37,7 +41,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>Mesas</title>
+		<title>Contas</title>
 		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="description"  content="" />
@@ -72,20 +76,20 @@
 					if($(this).val() == '')
 					{
 					  $(this).val('Buscando...');
-					  window.location = 'mesa.php';
+					  window.location = 'conta_manutencao.php';
 					}
 					else {
 						if ($(this).val()!="") {
-							window.location = 'mesa.php?string='+$(this).val();
+							window.location = 'conta_manutencao.php?string='+$(this).val();
 						}
 					}
 				});
 			});
 			
-			function deleta_mesa(id_mesa){
+			function deleta_conta(id_conta){
 					var confirma = confirm("deseja realmente deletar este usuário ?");
 					if(confirma) {
-						window.location = 'mesa.php?deletar=true&i='+id_mesa;
+						window.location = 'conta_manutencao.php?deletar=true&i='+id_conta;
 					}
 				} 
 		</script>
@@ -103,7 +107,7 @@
 				<img src="public/img/casa noturna.jpg" alt="" width="900" height="180" />
 			</div>		
 			<div class="conteudo">
-				<div class="campo_conteudo"><h1>MESAS</h1>
+				<div class="campo_conteudo"><h1>CONTAS</h1>
 
 					<div class="campo_botoes">
 						<form action="" class="busca">
@@ -114,53 +118,17 @@
 								<input type="button" value="" id="" />
 							</fieldset>
 						</form>
-						<a href="mesa_form.php">Cadastrar mesa</a>
+					
 					</div>
 
-					<form action="">
-						<fieldset>
-							<table border="0">
-								<thead>
-									<tr>
-										<th><input type="checkbox" /></th>
-										<th>ID</th>
-										<th>NUMERO</th>										
-										<th>TEMA</th>
-										<th>LUGARES</th>
-										<th class="opcoes">OPÇÕES</th>
-									</tr>
-								</thead>							
-								<tbody>
-									<?php foreach($mesas as $c => $mesa){
-										if($c%2==0) {?>
-									<tr>
-										<td><input type="checkbox" /></td>
-										<td><?=$mesa['id']?></td>
-										<td><?=$mesa['numero']?></td>
-										<td><?=$mesa['tema']?></td>
-										<td><?=$mesa['lugares']?></td>
-										<td>
-											<a href="mesa_form.php?i=<?=$mesa['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
-											<a href="javascript:deleta_mesa(<?=$mesa['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
-										</td>
-									</tr>
-									<?php } else { ?>
-									<tr class="impar">
-									<td><input type="checkbox" /></td>
-										<td><?=$mesa['id']?></td>
-										<td><?=$mesa['numero']?></td>
-										<td><?=$mesa['tema']?></td>
-										<td><?=$mesa['lugares']?></td>
-										<td>
-											<a href="mesa_form.php?i=<?=$mesa['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
-											<a href="javascript:deleta_mesa(<?=$mesa['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
-										</td>
-									</tr>
-									<? } } ?>
-								</tbody>
-							</table>
-						</fieldset>
-					</form>
+					<fieldset>
+						
+						<label style="top:-5px;">Filtros</label>
+						<select width="300px" >
+							<option>Criar option</option>
+						</select>	
+						
+					</fieldset>
 				</div>
 			</div>
 		</div>
