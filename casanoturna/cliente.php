@@ -1,3 +1,17 @@
+<?php
+	include("public/lib/_conexao.php");
+
+	$conexao = new Conexao;
+	$conexao->open();
+	
+	$clientes = $conexao->result("
+		SELECT *
+		FROM cliente
+	");
+	
+	$conexao->close();
+
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -81,37 +95,25 @@
 									<tr>
 										<th><input type="checkbox" /></th>
 										<th>ID</th>
-										<th>NOME</th>
-										<th>SOBRENOME</th>										
+										<th>NOME</th>										
 										<th>CLUBE</th>
 										<th class="opcoes">OPÇÕES</th>
 									</tr>
 								</thead>
 								<tbody>
+									<?php foreach($clientes as $c => $cliente){ ?>
 									<tr>
 										<td><input type="checkbox" /></td>
-										<td>2</td>
-										<td>Tarcísio</td>
-										<td>Fonseca Lima</td>
-										<td><a href="#">Cachaça</a></td>
+										<td><?=$cliente['id']?></td>
+										<td><?=$cliente['nome']?></td>
+										<td><a href="#">Não Cadastrado</a></td>
 										<td>
-											<a href="#"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
+											<a href="cliente_form.php?i=<?=$cliente['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
 											<a href="#"><img src="public/img/icon_log.png" alt="" title="Log" width="16" height="16" />
 											<a href="#"><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
 										</td>
 									</tr>
-									<tr class="impar">
-										<td><input type="checkbox" /></td>
-										<td>2</td>
-										<td>Tarcísio</td>
-										<td>Fonseca Lima</td>										
-										<td><a href="#">Cachaça</a></td>
-										<td>
-											<a href="#"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
-											<a href="#"><img src="public/img/icon_log.png" alt="" title="Log" width="16" height="16" />
-											<a href="#"><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
-										</td>
-									</tr>
+									<?php } ?>
 								</tbody>
 								<tfoot>
 									<tr>

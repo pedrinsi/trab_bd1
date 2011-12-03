@@ -1,3 +1,35 @@
+<?php
+	include("public/lib/_conexao.php");
+	include("public/lib/_manipulacao.php");
+	
+	$conexao = new Conexao;
+	$conexao->open();
+	
+	$manipula = new Manipula;
+	$manipula->setTabela("cliente");
+	$manipula->setChave("id");	
+	
+	$manipula->addCampo("id","","nontxt");
+	$manipula->addCampo("nome","","string");
+	$manipula->addCampo("cpf","","string");
+	
+	
+	$manipula->setAfterUpdate("cliente.php");
+	$manipula->setAfterInsert("cliente.php");
+	
+	$manipula->execManipula();
+	
+	if(isset($_GET['i'])){
+		$id_cliente = $_GET['i'];
+	} else {
+		$id_cliente = "";
+	}
+	
+	
+	
+	
+	$conexao->close();
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -35,8 +67,7 @@
 		
 	</head>
 	
-	<body>
-		
+	<body>		
 		<!-- TOPO -->
 		<?php include("_topo.php"); ?>		
 		
@@ -48,16 +79,16 @@
 			<div class="conteudo">
 				<div class="campo_conteudo">
 					<h1>Cadastro de cliente</h1>
-					<form action="cadastro" method="post">
-						<div class="cadastra">
-							<label for="nome">Nome</label>
-							<input class="nome" type="text" name="nome" value=""/>
+					<form action="cliente_form.php" method="post">
+						<div class="cadastra">						
+							<label for="id">Id</label>
+							<input class="nome" type="text" name="id" value="<?=$manipula->getValorCampo("id")?>"/>
 							
-							<label for="sobrenome">Sobrenome</label>
-							<input class="sobrenome" type="text" name="sobrenome" value=""/>
+							<label for="nome">Nome</label>
+							<input class="nome" type="text" name="nome" value="<?=$manipula->getValorCampo("nome")?>"/>
 							
 							<label for="cpf">CPF</label>
-							<input class="cpf" type="text" name="cpf" value=""/>
+							<input class="cpf" type="text" name="cpf" value="<?=$manipula->getValorCampo("cpf")?>"/>
 							
 							<label for="dt_nascimento">Data de Nascimento</label>
 							<input class="dt_nascimento" type="text" name="dt_nascimento" value=""/>
