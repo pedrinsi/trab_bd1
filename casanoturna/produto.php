@@ -9,7 +9,7 @@
 				b.fornecedor,
 				a.*
 			FROM produto as a
-			INNER JOIN lote as b on b.id = a.id_lote
+			LEFT JOIN lote as b on b.id = a.id_lote
 		");
 	
 	if((isset($_GET['deletar']))&&($_GET['deletar']=="true")) {
@@ -110,7 +110,7 @@
 										<td><?=$produto['fornecedor']?></td>
 										<td>
 											<a href="produto_form.php?i=<?=$produto['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
-											<a href="#" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
+											<a href="javascript:deleta_produto(<?=$produto['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
 										</td>
 									</tr>
 									<?php } else { ?>

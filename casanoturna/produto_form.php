@@ -5,6 +5,98 @@
 	$conexao = new Conexao;
 	$conexao->open();
 	
+	
+	// FAZENDO UPDATE
+	if((isset($_GET['mode']))&&($_GET['mode']=="update")) {
+			
+		// UPDATE PARA MATERIA PRIMA[1]
+		if($_GET['tipo']==1) {
+		
+			$estoque = $_GET['op1'];
+			$unidade_medida = $_GET['op2'];
+			$id_produtos = $_GET['id_produtos'];
+			
+			$update = $conexao->execute("
+				UPDATE materia_prima
+				SET estoque=$estoque, unidade_medida='$unidade_medida'
+				WHERE id_produto = $id_produtos
+			");
+		}
+		
+		//// UPDATE PARA COMERCIALIZAÇÃO DIRETA[2]
+		if($_GET['tipo']==2) {			
+		
+			$quantidade = $_GET['op1'];
+			$armazenamento = $_GET['op2'];
+			$id_produtos = $_GET['id_produtos'];
+			
+			$update = $conexao->execute("
+				UPDATE comercializacao_direta
+				SET quantidade=$quantidade, armazenamento='$armazenamento'
+				WHERE id_produto = $id_produtos
+			");
+		}
+?>
+<script type="text/javascript">
+	window.location = 'produto.php';
+</script>
+<?		
+		
+	} 
+	
+	// INSERINDO
+	if((isset($_GET['mode']))&&($_GET['mode']=="insert")) {
+
+		$sql = $conexao->result("SHOW TABLE STATUS LIKE 'produto'");
+		$next_id = $sql[0]['Auto_increment'];
+		$id_produto = $next_id -1;
+
+		// INSERT PARA MATERIA PRIMA[1]
+		if($_GET['tipo']==1) {
+		
+			$estoque = $_GET['op1'];
+			$unidade_medida = $_GET['op2'];
+			
+			$insert = $conexao->execute("
+				INSERT INTO materia_prima(
+					id_produto,
+					estoque,
+					unidade_medida
+				) VALUES (
+					$id_produto,
+					$estoque,
+					'$unidade_medida'
+				)
+			");
+		}
+		
+		// INSERT PARA COMERCIALIZAÇÃO DIRETA[2]
+		if($_GET['tipo']==2) {			
+		
+			$quantidade = $_GET['op1'];
+			$armazenamento = $_GET['op2'];
+			
+			$insert = $conexao->execute("
+				INSERT INTO comercializacao_direta(
+					id_produto,
+					quantidade,
+					armazenamento
+				) VALUES(
+					$id_produto,
+					$quantidade,
+					'$armazenamento'
+				)
+			");
+		}
+
+?>
+<script type="text/javascript">
+	window.location = 'produto.php';
+</script>
+<?
+		
+	}
+	
 	$manipula = new Manipula;
 	$manipula->setTabela("produto");
 	$manipula->setChave("id");
@@ -14,10 +106,52 @@
 	$manipula->addCampo("codigo_barras","","string");
 	$manipula->addCampo("descricao","","string");
 	
-	$manipula->setAfterUpdate("produto.php");
-	$manipula->setAfterInsert("produto.php");
+	// TIPO[1] = MATERIA PRIMA
+	if((isset($_POST['tipo']))&&($_POST['tipo']==1)){
+		$id_produtos = $_POST['id_produtos']; // usado para dar update na comercialização ou materia_prima
+		$op1 = $_POST['opcao1_value']; // pega valor do input da opcao1
+		$op2 = $_POST['opcao2_value']; // pega valor do input da opcao2
+		$manipula->setAfterUpdate("produto_form.php?mode=update&tipo=1&id_produtos=$id_produtos&op1=$op1&op2=$op2");
+		$manipula->setAfterInsert("produto_form.php?mode=insert&tipo=1&op1=$op1&op2=$op2");
+	}
+	// TIPO[2] = COMERCIALIZACAO DIRETA
+	if((isset($_POST['tipo']))&&($_POST['tipo']==2)){
+		$id_produtos = $_POST['id_produtos']; // usado para dar update na comercialização ou materia_prima
+		$op1 = $_POST['opcao1_value']; // pega valor do input da opcao1
+		$op2 = $_POST['opcao2_value']; // pega valor do input da opcao2
+		$manipula->setAfterUpdate("produto_form.php?mode=update&tipo=2&id_produtos=$id_produtos&op1=$op1&op2=$op2");
+		$manipula->setAfterInsert("produto_form.php?mode=insert&tipo=2&op1=$op1&op2=$op2");
+	}
 	
 	$manipula->execManipula();
+	
+	if(isset($_GET['i'])){
+		$materia_p = $conexao->result("
+			SELECT a.*
+			FROM materia_prima as a
+			WHERE a.id_produto = ".$_GET['i']."
+		");
+		
+		$comerc_d = $conexao->result("
+			SELECT a.*
+			FROM comercializacao_direta as a
+			WHERE a.id_produto = ".$_GET['i']."
+		");
+		
+		if(!empty($materia_p)){
+			$tipo = "Materia Prima";
+			$id_tipo = 1;
+			$campo1 = $materia_p[0]['estoque'];
+			$campo2 = $materia_p[0]['unidade_medida'];
+		} else {
+			$tipo = "Comercializacao Direta";
+			$id_tipo = 2;
+			$campo1 = $materia_p[0]['quantidade'];
+			$campo2 = $materia_p[0]['armazenamento'];
+		}
+		
+		
+	}
 	
 	$lotes = $conexao->result("
 		SELECT a.*
@@ -59,7 +193,7 @@
 					dropShadows: false                            // disable drop shadows 
 				});
 				
-				$('#id_lote').change(function() {
+				$('#tipo').change(function() {
 					if($(this).val() == 1) {
 						$('#opcao1').val('Estoque');
 						$('#opcao2').val('Unidade Medida');						
@@ -105,23 +239,42 @@
 
 							<label for="cpf">Código Barra</label>
 							<input class="cpf" type="text" name="codigo_barras" value="<?=$manipula->getValorCampo("codigo_barras")?>"/>
-
-							<label for="nome">Tipo</label>
-							<select name="id_lote" id="id_lote" onchange="change_tipo();">
-									<option value="1">Matéria Prima</option>
-									<option value="2">Comercialização Direta</option>
-							</select><br /><br />
 							
-							<input style="color:red;" type="text" name="opcao1" id="opcao1" value="Estoque"/>
-							<input class="cpf" type="text" name="estoque" value=""/>
+							<? if(isset($_GET['i'])) { ?>
 							
-							<input style="color:red;" type="text" name="opcao2" id="opcao2" value="Unidade Medida"/>
-							<input class="cpf" type="text" name="unidade_medida" value=""/>
+								<input style="color:green;" type="text" readonly="readonly" name="opcao2" id="opcao2" value="<?=$tipo?>"/>
+								<input type="hidden" name="tipo" id="tipo" value="<?=$id_tipo?>"/><br />
+								
+								<input style="color:red;" type="text" readonly="readonly" name="opcao1" id="opcao1" value="Estoque"/>
+								<input class="cpf" type="text"  name="opcao1_value" id="opcao1_value" value="<?=$campo1?>"/>
+								
+								<input style="color:red;" type="text" readonly="readonly" name="opcao2" id="opcao2" value="Unidade Medida"/>
+								<input class="cpf" type="text" name="opcao2_value" id="opcao2_value" value="<?=$campo2?>"/>
+
+								<br />
+								<br />
+								
+							<? } else { ?>	
+							
+								<label for="nome">Tipo</label>
+								<select name="tipo" id="tipo" onchange="change_tipo();">
+										<option value="1">Matéria Prima</option>
+										<option value="2">Comercialização Direta</option>
+								</select><br /><br />
+								
+							
+							
+							<input style="color:red;" type="text" readonly="readonly" name="opcao1" id="opcao1" value="Estoque"/>
+							<input class="cpf" type="text"  name="opcao1_value" id="opcao1_value" value=""/>
+							
+							<input style="color:red;" type="text" readonly="readonly" name="opcao2" id="opcao2" value="Unidade Medida"/>
+							<input class="cpf" type="text" name="opcao2_value" id="opcao2_value" value=""/>
 
 							<br />
 							<br />
-							<br />
-							<br />
+							<? } ?>
+							
+							<input type="hidden" name="id_produtos" id="id_produtos" value="<?=(isset($_GET['i'])) ? $_GET['i'] : "" ?>">
 							
 							<input type="hidden" name="trigger" id="trigger" value="<?php if($manipula->mode=="e"){ echo "edita"; } else { echo "insere"; }?>"/>
 							
