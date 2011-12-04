@@ -8,19 +8,8 @@
 		$string = $_GET['string'];		
 	}
 	
-	$setSituacao = (($_GET['filter']) != -1) ? "WHERE situacao = ".$_GET['filter']." " : "";
-	$busca = "";
-	
-	if((isset($string))){
-		if($_GET['filter'] == -1) {
-		$busca = " WHERE a.id = $string ";
-		}
-		else {
-		$busca =" AND a.id = $string ";
-		}
-	}
-	
 	//$busca = (isset($string)) ? " WHERE a.id LIKE '%$string%' " : "";
+	$id = $_GET['i'];
 	
 	$contas = $conexao->result("
 		SELECT 
@@ -36,11 +25,11 @@
 		FROM conta as a
 		LEFT JOIN cliente b ON b.id = a.id_cliente
 		LEFT JOIN mesa c ON c.id = a.id_mesa
-		$setSituacao
-		$busca
-		ORDER BY situacao DESC
-		
-	");
+	  WHERE a.id = $id "
+	
+	);
+	
+	$conta = $contas[0];
 	
 	/*DELETAR*/
 	if((isset($_GET['deletar']))&&($_GET['deletar']=="true")) {
@@ -56,6 +45,26 @@
 <?
 	
 	}
+	
+	
+		/*ENCERRAR*/
+		if((isset($_GET['encerrar']))&&($_GET['encerrar']=="true")) {
+	
+		$deleta_conta = $conexao->execute("
+			UPDATE conta			
+				SET	
+				situacao = 0
+			WHERE id = ".$_GET['i']."
+		");
+?>
+<script type="text/javascript">
+	window.location = 'conta_manutencao.php?filter=-1';
+</script>
+<?
+	
+	}
+	
+	
 	
 	$conexao->close();
 
@@ -98,25 +107,25 @@
 					if($(this).val() == '')
 					{
 					  $(this).val('Buscando...');
-					  window.location = 'conta_manutencao.php?filter=<?=$_GET['filter']?>';
+					  window.location = 'conta_view.php?filter=<?=$_GET['filter']?>';
 					}
 					else {
 						if ($(this).val()!="") {
-							window.location = 'conta_manutencao.php?filter=<?=$_GET['filter']?>&string='+$(this).val();
+							window.location = 'conta_view.php?filter=<?=$_GET['filter']?>&string='+$(this).val();
 						}
 					}
 				});
 			});
 			
-			function deleta_conta(id_conta){
-					var confirma = confirm("deseja realmente deletar esta conta ?");
+
+			function encerra_conta(id_conta,valor_total) {
+				var confirma = confirm("Deseja realmente encerrar esta conta ?\nValor Total : "+valor_total);
 					if(confirma) {
-						window.location = 'conta_manutencao.php?filter='+<?=$_GET['filter']?>+'&deletar=true&i='+id_conta;
+						window.location = 'conta_view.php?filter='+<?=$_GET['filter']?>+'&encerrar=true&i='+<?=$_GET['i']?>;
 					}
-				} 
-			function filter(value) {
-				window.location = 'conta_manutencao.php?filter='+value;
-			}				
+			
+			}
+			
 				
 		</script>
 		
@@ -133,7 +142,7 @@
 				<img src="public/img/casa noturna.jpg" alt="" width="900" height="180" />
 			</div>		
 			<div class="conteudo">
-				<div class="campo_conteudo"><h1>CONTAS</h1>
+				<div class="campo_conteudo"><h1>INFORMAÇÃO CONTA <?if($conta['situacao']==0){?><span style="color:red;">ENCERRADA</span><?}?></h1>
 
 					<div class="campo_botoes">
 						<form action="" class="busca">
@@ -144,16 +153,18 @@
 								<input type="button" value="" id="" />
 							</fieldset>
 						</form>
-							
-						<select style="width:150px; text-align:center;margin-left:180px;" onChange="filter(this.value);">
-							<option value="-1" >TODAS AS CONTAS</option>
-							<option value="1" <?if($_GET['filter'] == 1) { ?> selected <?} ?> > Abertas</option> 
-							<option value="0" <?if($_GET['filter'] == 0) { ?> selected <?} ?>> Fechadas</option>	
-						</select>
-						
-						<a href="conta_form.php">Abrir Conta</a>
+						<?if($conta['situacao']==1){?>	
+						<a href="#">Inserir Item</a>
+						<a href="javascript:encerra_conta(<?=$conta['id']?>,<?=$conta['valor_total']?>);" >Encerrar Conta</a>
+						<?}?>
 					</div>
-
+					<div class="campo_botoes">
+						<div>Cliente : <?=$conta['nome']?></div>
+						<div>Mesa : <?=$conta['tema']?></div>
+						<div>Valor Total :<?=$conta['valor_total']?></div>
+					</div>
+					
+		
 					<form action="">
 						<fieldset>
 							<table border="0">
@@ -161,10 +172,8 @@
 									<tr>
 										<th><input type="checkbox" /></th>
 										<th>ID</th>
-										<th>CLIENTE</th>										
-										<th>MESA</th>
-										<th>SITUAÇÃO</th>
-										<th>DESCRIÇÃO</th>
+										<th>DESCRICAO</th>										
+										<th>PREÇO</th>								
 										<th class="opcoes">OPÇÕES</th>
 									</tr>
 								</thead>							
@@ -173,62 +182,24 @@
 										if($c%2==0) {?>
 									<tr>
 										<td><input type="checkbox" /></td>
-										<td><?=$linha['id']?></td>
-										<td><?if($linha['nome'] == null){
-											?>
-											<span >Anonymous</span>	
-											<?
-											} else {
-											?>
-											<span ><?=$linha['nome']?></span>	
-											<?}?></td>
-										<td><?=$linha['tema']?></td>
-										<td><?
-											if($linha['situacao'] == 0){
-											?>
-											<span style="color:red">Fechada</span>	
-											<?
-											} else {
-											?>
-											<span style="color:green">Aberta</span>	
-											<?}?>											
-										</td>
-										<td><?=$linha['descricao']?></td>
-										<td>
-											
-											<a href="conta_view.php?filter=-1&i=(<?=$linha['id']?>);" ><img src="public/img/icone-Informacao.png" alt="" title="Inf." width="16" height="16" />
+										<td></td>								
+										<td></td>										
+										<td></td>
+										<td>											
+											<a href="conta_view.php?i=(<?=$linha['id']?>);" ><img src="public/img/icone-Informacao.png" alt="" title="Inf." width="16" height="16" />
 											<a href="javascript:deleta_conta(<?=$linha['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
 										</td>
 									</tr>
 									<?php } else { ?>
 									<tr class="impar">
 									<td><input type="checkbox" /></td>
-										<td><?=$linha['id']?></td>
-										<td><?if($linha['nome'] == null){
-											?>
-											<span >Anonymous</span>	
-											<?
-											} else {
-											?>
-											<span ><?=$linha['nome']?></span>	
-											<?}?>
-										</td>
-										<td><?=$linha['tema']?></td>
-										<td><?
-											if($linha['situacao'] == 0){
-											?>
-											<span style="color:red">Fechada</span>	
-											<?
-											} else {
-											?>
-											<span style="color:green">Aberta</span>	
-											<?}?>											
-										</td>
-										<td><?=$linha['descricao']?></td>
+										<td></td>										
+										<td></td>									
+										<td></td>
 										<td>
-											<a href="conta_view.php?filter=-1&i=(<?=$linha['id']?>);" ><img src="public/img/icone-Informacao.png" alt="" title="Inf." width="16" height="16" />
+											<a href="conta_view.php?i=(<?=$linha['id']?>);" ><img src="public/img/icone-Informacao.png" alt="" title="Inf." width="16" height="16" />
 											<a href="javascript:deleta_conta(<?=$linha['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
-									</td>
+										</td>
 									</tr>
 									<? } } ?>
 								</tbody>

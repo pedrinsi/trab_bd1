@@ -29,16 +29,17 @@
 			$quantidade = $_GET['op1'];
 			$armazenamento = $_GET['op2'];
 			$id_produtos = $_GET['id_produtos'];
+			$class = $_GET['class'];
 			
 			$update = $conexao->execute("
 				UPDATE comercializacao_direta
-				SET quantidade=$quantidade, armazenamento='$armazenamento'
+				SET quantidade=$quantidade, armazenamento='$armazenamento', classificacao='$class'
 				WHERE id_produto = $id_produtos
 			");
 		}
 ?>
 <script type="text/javascript">
-	window.location = 'produto.php';
+	window.location = 'produto.php?';
 </script>
 <?		
 		
@@ -75,28 +76,34 @@
 		
 			$quantidade = $_GET['op1'];
 			$armazenamento = $_GET['op2'];
+			$class = $_GET['class']; 
 			
 			$insert = $conexao->execute("
 				INSERT INTO comercializacao_direta(
 					id_produto,
 					quantidade,
-					armazenamento
+					armazenamento,
+					classificacao
 				) VALUES(
 					$id_produto,
 					$quantidade,
-					'$armazenamento'
+					'$armazenamento',
+					'$class'
 				)
 			");
 		}
-
+		
+	if(($class=="bebidas geladas")||($class=="bebidas quentes")) {
 ?>
 <script type="text/javascript">
-	window.location = 'produto.php';
+	window.location = 'produto_form.php';
 </script>
-<?
-		
+	<? } else {	?>
+<script type="text/javascript">
+	window.location = 'produto.php';
+</script><? 
 	}
-	
+}
 	$manipula = new Manipula;
 	$manipula->setTabela("produto");
 	$manipula->setChave("id");
@@ -119,8 +126,9 @@
 		$id_produtos = $_POST['id_produtos']; // usado para dar update na comercialização ou materia_prima
 		$op1 = $_POST['opcao1_value']; // pega valor do input da opcao1
 		$op2 = $_POST['opcao2_value']; // pega valor do input da opcao2
-		$manipula->setAfterUpdate("produto_form.php?mode=update&tipo=2&id_produtos=$id_produtos&op1=$op1&op2=$op2");
-		$manipula->setAfterInsert("produto_form.php?mode=insert&tipo=2&op1=$op1&op2=$op2");
+		$class = $_POST['classificacao']; //Classificação da comercialização direta
+		$manipula->setAfterUpdate("produto_form.php?mode=update&tipo=2&id_produtos=$id_produtos&op1=$op1&op2=$op2&class=$class");
+		$manipula->setAfterInsert("produto_form.php?mode=insert&tipo=2&op1=$op1&op2=$op2&class=$class");
 	}
 	
 	$manipula->execManipula();
@@ -146,8 +154,8 @@
 		} else {
 			$tipo = "Comercializacao Direta";
 			$id_tipo = 2;
-			$campo1 = $materia_p[0]['quantidade'];
-			$campo2 = $materia_p[0]['armazenamento'];
+			$campo1 = $comerc_d[0]['quantidade'];
+			$campo2 = $comerc_d[0]['armazenamento'];
 		}
 		
 		
@@ -196,13 +204,16 @@
 				$('#tipo').change(function() {
 					if($(this).val() == 1) {
 						$('#opcao1').val('Estoque');
-						$('#opcao2').val('Unidade Medida');						
+						$('#opcao2').val('Unidade Medida');	
+						$('.classi').css("visibility", "hidden");						
 					}
 					if($(this).val() == 2) {
 						$('#opcao1').val('Quantidade');
 						$('#opcao2').val('Armazenamento');
+						$('.classi').css("visibility", "visible");
 					}
 				});
+				
 			});
 			
 		</script>
@@ -245,6 +256,17 @@
 								<input style="color:green;" type="text" readonly="readonly" name="opcao2" id="opcao2" value="<?=$tipo?>"/>
 								<input type="hidden" name="tipo" id="tipo" value="<?=$id_tipo?>"/><br />
 								
+								<div class="classi">
+									<label for="nome">Classificação</label>
+									<select name="classificacao" id="classificacao">
+											<option value="secos">Secos</option>
+											<option value="molhados">Molhados</option>
+											<option value="refrigerados">Refrigerados</option>
+											<option value="bebidas quentes">Bebidas Quentes</option>
+											<option value="bebidas geladas">Bebidas Geladas</option>
+									</select><br /><br />								
+								</div>
+								
 								<input style="color:red;" type="text" readonly="readonly" name="opcao1" id="opcao1" value="Estoque"/>
 								<input class="cpf" type="text"  name="opcao1_value" id="opcao1_value" value="<?=$campo1?>"/>
 								
@@ -257,10 +279,21 @@
 							<? } else { ?>	
 							
 								<label for="nome">Tipo</label>
-								<select name="tipo" id="tipo" onchange="change_tipo();">
+								<select name="tipo" id="tipo">
 										<option value="1">Matéria Prima</option>
 										<option value="2">Comercialização Direta</option>
 								</select><br /><br />
+								
+								<div class="classi" style="visibility:hidden;">
+									<label for="nome">Classificação</label>
+									<select name="classificacao" id="classificacao">
+											<option value="secos">Secos</option>
+											<option value="molhados">Molhados</option>
+											<option value="refrigerados">Refrigerados</option>
+											<option value="bebidas quentes">Bebidas Quentes</option>
+											<option value="bebidas geladas">Bebidas Geladas</option>
+									</select><br /><br />								
+								</div>
 								
 							
 							

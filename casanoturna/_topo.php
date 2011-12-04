@@ -11,8 +11,8 @@
 				<a href="#">Atendimento</a>
 				<ul class="submenu">
 					<li><a href="cardapio.php">Cardápio</a></li>
-					<li><a href="bebidas.php">Bebidas</a></li>
-					<li><a href="comidas.php">Comidas</a></li>
+					<li><a href="bebida.php">Bebidas</a></li>
+					<li><a href="comida.php">Comidas</a></li>
 					<li><a href="mesa.php">Mesas</a></li>
 				</ul>
 			</li>

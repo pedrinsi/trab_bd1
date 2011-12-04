@@ -7,7 +7,7 @@
 	
 	$next_id = $conexao->result("SHOW TABLE STATUS LIKE 'conta'");
 	$id_conta = (isset($_GET['i'])) ? $_GET['i'] : $next_id[0]['Auto_increment'];
-	
+		
 	$manipula = new Manipula;
 	$manipula->setTabela("conta");
 	$manipula->setChave("id");	
@@ -35,9 +35,11 @@
 	
 	$mesas = $conexao->result("
 		SELECT 
-			id,
-			tema
-		FROM mesa
+			a.id,
+			a.tema
+		FROM mesa as a
+		INNER JOIN conta b ON b.id_mesa = a.id
+		WHERE b.situacao = 0
 	");
 	
 	$conexao->close();
@@ -76,8 +78,17 @@
 				});
 			});
 			
-			function selecCliente() {
+			function selecCliente(value) {
+				
+				if(value == 0) {
+				
+					document.getElementById("teste").style.display = "block";
+				
+				} else {
+			
 				document.getElementById("teste").style.display = "none";
+				
+				}
 			
 			}
 		</script>
@@ -107,7 +118,8 @@
 						<div class="cadastra">
 							
 							<label for="id_cliente">Cliente</label>
-							<select name="id_cliente"  style="width:150px;" onChange="selecCliente();" >
+							<select name="id_cliente"  style="width:150px;" onChange="selecCliente(this.value);" >
+								
 								<?foreach($clientes as $i => $linha) {?>	
 								<option value="<?=$linha['id']?>" ><?=$linha['nome']?></option>
 								<?}?>
