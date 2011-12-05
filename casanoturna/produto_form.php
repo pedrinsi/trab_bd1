@@ -37,6 +37,33 @@
 				WHERE id_produto = $id_produtos
 			");
 		}
+	
+	//UPDATE PARA TABELA DE BEBIDAS
+	if(isset($_GET['class'])) {
+		if(($_GET['class']=="bebidas geladas")||($_GET['class']=="bebidas quentes"))  {
+			$sql = $conexao->result("SHOW TABLE STATUS LIKE 'comercializacao_direta'");
+			$next_id = $sql[0]['Auto_increment'];
+			$id_comercializacao_direta = $next_id -1;
+			$temp = $_GET['temp'];
+			$id_clube = $_GET['clube'];
+			$id_bebida = $_GET['id_bebida'];
+			
+			if($id_clube==-1) {
+				$insert = $conexao->execute("
+					UPDATE bebida
+					SET id_clube=NULL,id_comercializacao_direta=$id_comercializacao_direta, temperatura_ideal='$temp'
+					WHERE id = $id_bebida
+				");
+			} else {			
+				$insert = $conexao->execute("					
+					UPDATE bebida
+					SET id_clube=$id_clube,id_comercializacao_direta=$id_comercializacao_direta, temperatura_ideal='$temp'
+					WHERE id = $id_bebida
+				");
+			}
+			
+		}
+	}
 ?>
 <script type="text/javascript">
 	window.location = 'produto.php?';
@@ -45,8 +72,8 @@
 		
 	} 
 	
-	// INSERINDO
-	if((isset($_GET['mode']))&&($_GET['mode']=="insert")) {
+// INSERINDO
+if((isset($_GET['mode']))&&($_GET['mode']=="insert")) {
 
 		$sql = $conexao->result("SHOW TABLE STATUS LIKE 'produto'");
 		$next_id = $sql[0]['Auto_increment'];
@@ -93,16 +120,48 @@
 			");
 		}
 		
-	if(($class=="bebidas geladas")||($class=="bebidas quentes")) {
+	//INSERT PARA TABELA DE BEBIDAS
+	if(isset($_GET['class'])) {
+		if(($_GET['class']=="bebidas geladas")||($_GET['class']=="bebidas quentes"))  {
+			$sql = $conexao->result("SHOW TABLE STATUS LIKE 'comercializacao_direta'");
+			$next_id = $sql[0]['Auto_increment'];
+			$id_comercializacao_direta = $next_id -1;
+			$temp = $_GET['temp'];
+			$id_clube = $_GET['clube'];
+			
+			if($id_clube==-1) {
+				$insert = $conexao->execute("
+					INSERT INTO bebida(
+						id_comercializacao_direta,
+						temperatura_ideal
+					) VALUES(
+						$id_comercializacao_direta,
+						'$temp'
+					)
+				");
+			} else {			
+				$insert = $conexao->execute("
+					INSERT INTO bebida(
+						id_clube,
+						id_comercializacao_direta,
+						temperatura_ideal
+					) VALUES(
+						$id_clube,
+						$id_comercializacao_direta,
+						'$temp'
+					)
+				");
+			}
+			
+		}
+	}
+	
 ?>
 <script type="text/javascript">
-	window.location = 'produto_form.php';
-</script>
-	<? } else {	?>
-<script type="text/javascript">
 	window.location = 'produto.php';
-</script><? 
-	}
+</script>
+<?
+
 }
 	$manipula = new Manipula;
 	$manipula->setTabela("produto");
@@ -127,8 +186,11 @@
 		$op1 = $_POST['opcao1_value']; // pega valor do input da opcao1
 		$op2 = $_POST['opcao2_value']; // pega valor do input da opcao2
 		$class = $_POST['classificacao']; //Classificação da comercialização direta
-		$manipula->setAfterUpdate("produto_form.php?mode=update&tipo=2&id_produtos=$id_produtos&op1=$op1&op2=$op2&class=$class");
-		$manipula->setAfterInsert("produto_form.php?mode=insert&tipo=2&op1=$op1&op2=$op2&class=$class");
+		$temp = (isset($_POST['temperatura_ideal'])) ? $_POST['temperatura_ideal'] : ""; //temperatuda da bebida
+		$clube = (isset($_POST['clube']))? $_POST['clube'] : "" ; //id do clube
+		$id_bebida = (isset($_POST['id_bebida'])) ? $_POST['id_bebida'] : ""; //id da bebida para update da bebida
+		$manipula->setAfterUpdate("produto_form.php?mode=update&tipo=2&id_produtos=$id_produtos&op1=$op1&op2=$op2&class=$class&temp=$temp&clube=$clube&id_bebida=$id_bebida");
+		$manipula->setAfterInsert("produto_form.php?mode=insert&tipo=2&op1=$op1&op2=$op2&class=$class&temp=$temp&clube=$clube");
 	}
 	
 	$manipula->execManipula();
@@ -156,6 +218,7 @@
 			$id_tipo = 2;
 			$campo1 = $comerc_d[0]['quantidade'];
 			$campo2 = $comerc_d[0]['armazenamento'];
+			$classifica =  $comerc_d[0]['classificacao'];
 		}
 		
 		
@@ -206,14 +269,15 @@
 						$('#opcao1').val('Estoque');
 						$('#opcao2').val('Unidade Medida');	
 						$('.classi').css("visibility", "hidden");						
+						$('.temperat').css("visibility", "hidden");						
 					}
 					if($(this).val() == 2) {
 						$('#opcao1').val('Quantidade');
 						$('#opcao2').val('Armazenamento');
 						$('.classi').css("visibility", "visible");
+						$('.temperat').css("visibility", "visible");
 					}
-				});
-				
+				});				
 			});
 			
 		</script>
@@ -256,16 +320,38 @@
 								<input style="color:green;" type="text" readonly="readonly" name="opcao2" id="opcao2" value="<?=$tipo?>"/>
 								<input type="hidden" name="tipo" id="tipo" value="<?=$id_tipo?>"/><br />
 								
+								<? if($id_tipo == 2 ) { ?>
+								
+								 
 								<div class="classi">
-									<label for="nome">Classificação</label>
-									<select name="classificacao" id="classificacao">
-											<option value="secos">Secos</option>
-											<option value="molhados">Molhados</option>
-											<option value="refrigerados">Refrigerados</option>
-											<option value="bebidas quentes">Bebidas Quentes</option>
-											<option value="bebidas geladas">Bebidas Geladas</option>
-									</select><br /><br />								
+									<label for="cpf">Classificacao</label>
+									<input class="cpf" type="text" readonly="readonly" name="classificacao" value="<?=$classifica?>"/>								
 								</div>
+								
+								<?if(isset($classifica)) { 
+									$bebida = $conexao->result("
+										SELECT a.*
+										FROM bebida as a
+										INNER JOIN comercializacao_direta as b ON b.id = a.id_comercializacao_direta
+										WHERE b.id_produto = ".$_GET['i']."
+									");
+								
+								?>
+								<div class="temperat">
+									<label for="cpf">Temperatura Armazenamento</label>
+									<input class="cpf" type="text" name="temperatura_ideal" value="<?=$bebida[0]['temperatura_ideal']?>"/>
+									
+									<label for="cpf">Clube</label>
+									<select name="clube" id="clube">
+											<option value="-1" <? if($bebida[0]['id_clube']==NULL) { ?> selected <? } ?> ></option>
+											<option value="1" <? if($bebida[0]['id_clube']==1) { ?> selected <? } ?>>Cachaça</option>
+											<option value="2" <? if($bebida[0]['id_clube']==2) { ?> selected <? } ?>>Vinho</option>
+											<option value="3" <? if($bebida[0]['id_clube']==3) { ?> selected <? } ?>>Whisky</option>
+									</select>
+								</div>
+								
+								<input type="hidden" name="id_bebida" value="<?=$bebida[0]['id']?>"/>
+								<?  } } ?>
 								
 								<input style="color:red;" type="text" readonly="readonly" name="opcao1" id="opcao1" value="Estoque"/>
 								<input class="cpf" type="text"  name="opcao1_value" id="opcao1_value" value="<?=$campo1?>"/>
@@ -276,7 +362,7 @@
 								<br />
 								<br />
 								
-							<? } else { ?>	
+							<?  } else { ?>	
 							
 								<label for="nome">Tipo</label>
 								<select name="tipo" id="tipo">
@@ -295,6 +381,19 @@
 									</select><br /><br />								
 								</div>
 								
+								<div class="temperat" style="visibility:hidden;">
+									<label for="cpf">Temperatura Armazenamento</label>
+									<input class="cpf" type="text" name="temperatura_ideal" value=""/>
+									
+									<label for="cpf">Clube</label>
+									<select name="clube" id="clube">
+											<option value="-1"></option>
+											<option value="1">Cachaça</option>
+											<option value="2">Vinho</option>
+											<option value="3">Whisky</option>
+									</select>
+								</div>
+								
 							
 							
 							<input style="color:red;" type="text" readonly="readonly" name="opcao1" id="opcao1" value="Estoque"/>
@@ -305,6 +404,7 @@
 
 							<br />
 							<br />
+							
 							<? } ?>
 							
 							<input type="hidden" name="id_produtos" id="id_produtos" value="<?=(isset($_GET['i'])) ? $_GET['i'] : "" ?>">

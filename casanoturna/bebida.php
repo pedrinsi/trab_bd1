@@ -8,16 +8,18 @@
 		$string = $_GET['string'];		
 	}
 	
-	$busca = (isset($string)) ? " WHERE descricao LIKE '%$string%' " : "";
+	$busca = (isset($string)) ? " WHERE c.descricao LIKE '%$string%' " : "";
 	
 	$bebidas = $conexao->result("
 		SELECT 
 			a.id,
 			c.descricao,
-			c.valor_unidade	
+			c.valor_unidade,
+			b.classificacao	
 		FROM bebida as a
 		INNER JOIN comercializacao_direta b ON b.id = a.id_comercializacao_direta
 		INNER JOIN produto c ON c.id = b.id_produto
+		$busca
 		
 	");
 	
@@ -129,7 +131,8 @@
 										<th><input type="checkbox" /></th>
 										<th>ID</th>
 										<th>NOME</th>	
-										<th>VALOR</th>		
+										<th>VALOR</th>
+										<th>CLASSIFICAÇÃO</th>										
 										<th class="opcoes">OPÇÕES</th>
 									</tr>
 								</thead>							
@@ -141,6 +144,7 @@
 										<td><?=$linha['id']?></td>
 										<td><?=$linha['descricao']?></td>
 										<td><?=$linha['valor_unidade']?></td>
+										<td><?=$linha['classificacao']?></td>
 										<td>
 											<a href="bebida_form.php?i=<?=$linha['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
 											<a href="javascript:deleta_bebida(<?=$linha['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
@@ -151,7 +155,8 @@
 										<td><input type="checkbox" /></td>
 										<td><?=$linha['id']?></td>
 										<td><?=$linha['descricao']?></td>
-										<td><?=$linha['valor_unidade']?></td>										
+										<td><?=$linha['valor_unidade']?></td>
+										<td><?=$linha['classificacao']?></td>										
 										<td>
 											<a href="bebida_form.php?i=<?=$linha['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />											
 											<a href="javascript:deleta_bebida(<?=$linha['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
