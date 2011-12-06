@@ -243,7 +243,7 @@
 																WHERE id_cardapio = $id AND id_prato = ".$linha['id']."
 															");
 															
-															$img = (empty($itens_cardapio)) ? "public/img/check.png" : "public/img/icon_deletar.png";
+															$img = (empty($itens_cardapio)) ? "public/img/check.png" : "public/img/remove.png";
 															$mode = (empty($itens_cardapio)) ? 1 : 2;
 															$title = (empty($itens_cardapio)) ? "Adicionar" : "Remover";
 
@@ -289,7 +289,7 @@
 																WHERE id_cardapio = $id AND id_comercializacao_direta = ".$linha['id']."
 															");
 															
-															$img = (empty($itens_cardapio)) ? "public/img/check.png" : "public/img/icon_deletar.png";
+															$img = (empty($itens_cardapio)) ? "public/img/check.png" : "public/img/remove.png";
 															$mode = (empty($itens_cardapio)) ? 1 : 2;
 															$title = (empty($itens_cardapio)) ? "Adicionar" : "Remover";
 															
@@ -334,7 +334,7 @@
 																WHERE id_cardapio = $id AND id_comercializacao_direta = ".$linha['id']."
 															");
 															
-															$img = (empty($itens_cardapio)) ? "public/img/check.png" : "public/img/icon_deletar.png";
+															$img = (empty($itens_cardapio)) ? "public/img/check.png" : "public/img/remove.png";
 															$mode = (empty($itens_cardapio)) ? 1 : 2;
 															$title = (empty($itens_cardapio)) ? "Adicionar" : "Remover";
 
