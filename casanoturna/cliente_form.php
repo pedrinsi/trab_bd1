@@ -11,6 +11,14 @@
 	
 	$manipula->addCampo("nome","","string");
 	$manipula->addCampo("cpf","","string");	 
+	$manipula->addCampo("dt_nascimento","","string");	 
+	$manipula->addCampo("end_logradouro","","string");	 
+	$manipula->addCampo("end_numero","","string");	 
+	$manipula->addCampo("end_complemento","","string");	 
+	$manipula->addCampo("end_municipio","","string");	 
+	$manipula->addCampo("end_uf","","string");	 
+	$manipula->addCampo("end_cep","","string");	 
+	$manipula->addCampo("telefone","","string");
 	
 	
 	if((isset($_GET['c']))&&($_GET['c']==1)) {
@@ -89,30 +97,30 @@
 							
 							<label for="cpf">CPF</label>
 							<input class="cpf" type="text" name="cpf" value="<?=$manipula->getValorCampo("cpf")?>"/>
-							
-							<label for="dt_nascimento">Data de Nascimento</label>
-							<input class="dt_nascimento" type="text" name="dt_nascimento" value=""/>
+
+							<label for="dt_nascimento">Data de Nascimento &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(YYYY-MM-DD)</label>
+							<input class="dt_nascimento" type="text" name="dt_nascimento" value="<?=date("d/m/Y", strtotime($manipula->getValorCampo("dt_nascimento")))?>"/>
 							
 							<label for="end_logradouro">Logradouro</label>
-							<input class="end_logradouro" type="text" name="end_logradouro" value=""/>
+							<input class="end_logradouro" type="text" name="end_logradouro" value="<?=$manipula->getValorCampo("end_logradouro")?>"/>
 							
 							<label for="end_numero">Número</label>
-							<input class="end_numero" type="text" name="end_numero" value=""/>
+							<input class="end_numero" type="text" name="end_numero" value="<?=$manipula->getValorCampo("end_numero")?>"/>
 							
 							<label for="end_complemento">Complemento</label>
-							<input class="end_complemento" type="text" name="end_complemento" value=""/>
+							<input class="end_complemento" type="text" name="end_complemento" value="<?=$manipula->getValorCampo("end_complemento")?>"/>
 							
 							<label for="end_municipio">Munícipio</label>
-							<input class="end_municipio" type="text" name="end_municipio" value=""/>
+							<input class="end_municipio" type="text" name="end_municipio" value="<?=$manipula->getValorCampo("end_municipio")?>"/>
 							
 							<label for="end_uf">UF</label>
-							<input class="end_uf" type="text" name="end_uf" value=""/>
+							<input class="end_uf" type="text" name="end_uf" value="<?=$manipula->getValorCampo("end_uf")?>"/>
 							
 							<label for="end_cep">CEP</label>
-							<input class="end_cep" type="text" name="end_cep" value=""/>
+							<input class="end_cep" type="text" name="end_cep" value="<?=$manipula->getValorCampo("end_cep")?>"/>
 							
 							<label for="telefone">Telefone</label>
-							<input class="telefone" type="text" name="telefone" value=""/>
+							<input class="telefone" type="text" name="telefone" value="<?=$manipula->getValorCampo("telefone")?>"/>
 							
 							<input type="hidden" name="trigger" id="trigger" value="<?php if($manipula->mode=="e"){ echo "edita"; } else { echo "insere"; }?>"/>
 							

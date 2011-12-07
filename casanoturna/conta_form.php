@@ -14,7 +14,7 @@
 	
 	$manipula->addCampo("id_cliente","","nontxt");
 	$manipula->addCampo("id_mesa","","nontxt");	 
-	$manipula->addCampo("dt_abertura","","string");	 
+	$manipula->addCampo("dt_abertura","","date");	 
 	$manipula->addCampo("situacao",1,"nontxt");	 
 	$manipula->addCampo("valor_total",0,"nontxt");
 	$manipula->addCampo("descricao","","string");	

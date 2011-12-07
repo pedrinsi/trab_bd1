@@ -122,8 +122,6 @@
 							<table border="0">
 								<thead>
 									<tr>
-										<th><input type="checkbox" /></th>
-										<th>ID</th>
 										<th>NUMERO</th>										
 										<th>TEMA</th>
 										<th>LUGARES</th>
@@ -134,8 +132,6 @@
 									<?php foreach($mesas as $c => $mesa){
 										if($c%2==0) {?>
 									<tr>
-										<td><input type="checkbox" /></td>
-										<td><?=$mesa['id']?></td>
 										<td><?=$mesa['numero']?></td>
 										<td><?=$mesa['tema']?></td>
 										<td><?=$mesa['lugares']?></td>
@@ -146,8 +142,6 @@
 									</tr>
 									<?php } else { ?>
 									<tr class="impar">
-									<td><input type="checkbox" /></td>
-										<td><?=$mesa['id']?></td>
 										<td><?=$mesa['numero']?></td>
 										<td><?=$mesa['tema']?></td>
 										<td><?=$mesa['lugares']?></td>

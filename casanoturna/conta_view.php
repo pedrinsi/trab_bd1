@@ -1,15 +1,32 @@
 <?php
 	include("public/lib/_conexao.php");
+	include("_calcula_valor_conta.php");
 
 	$conexao = new Conexao;
 	$conexao->open();
+	
+	
 	
 	if(isset($_GET['string'])) {	
 		$string = $_GET['string'];		
 	}
 	
-	//$busca = (isset($string)) ? " WHERE a.id LIKE '%$string%' " : "";
+	//RETIRAR PRODUTO DA CONTA
+	if(isset($_GET['produto'])){
+		$id_produto_historico = $_GET['produto'];
+		
+		$delete = $conexao->execute("
+			DELETE FROM historico_conta
+			WHERE id = $id_produto_historico
+		");
+		
+		calcula_conta($conexao,$_GET['i']);	
+	}
+	
 	$id = $_GET['i'];
+	
+	//$busca = (isset($string)) ? " WHERE a.id LIKE '%$string%' " : "";
+	
 	
 	$contas = $conexao->result("
 		SELECT 
@@ -25,8 +42,7 @@
 		FROM conta as a
 		LEFT JOIN cliente b ON b.id = a.id_cliente
 		LEFT JOIN mesa c ON c.id = a.id_mesa
-	  WHERE a.id = $id "
-	
+	  WHERE a.id = $id "	
 	);
 	
 	$conta = $contas[0];
@@ -47,8 +63,8 @@
 	}
 	
 	
-		/*ENCERRAR*/
-		if((isset($_GET['encerrar']))&&($_GET['encerrar']=="true")) {
+	/*ENCERRAR*/
+	if((isset($_GET['encerrar']))&&($_GET['encerrar']=="true")) {
 	
 		$deleta_conta = $conexao->execute("
 			UPDATE conta			
@@ -64,7 +80,29 @@
 	
 	}
 	
+
+	//REFERENCIA 0 para prato
+	$pratos_conta = $conexao->result("
+		SELECT 	a.id,
+				c.nome,
+				c.custo_preparo
+		FROM historico_conta as a
+		INNER JOIN cardapios_pratos as b on a.id_item_cardapio = b.id
+		INNER JOIN prato as c on c.id = b.id_prato
+		WHERE a.id_conta = $id AND a.id_referencia_cardapio = 0
+	");
 	
+	//REFERENCIA 1 para comercializacao
+	$produtos_conta = $conexao->result("
+		SELECT 	a.id,
+				d.descricao,
+				d.valor_unidade
+		FROM historico_conta as a
+		INNER JOIN cardapios_comercializacao_direta as b on a.id_item_cardapio = b.id
+		INNER JOIN comercializacao_direta as c on c.id = b.id_comercializacao_direta
+		INNER JOIN produto as d on d.id = c.id_produto
+		WHERE a.id_conta = $id AND a.id_referencia_cardapio = 1
+	");
 	
 	$conexao->close();
 
@@ -125,6 +163,13 @@
 					}
 			
 			}
+			function deleta_item(id_produto) {
+				var confirma = confirm("Deseja realmente remover o item da conta ?");
+					if(confirma) {
+						window.location = 'conta_view.php?produto='+id_produto+'&i='+<?=$_GET['i']?>+'&filter='+<?=$_GET['filter']?>;
+					}
+			
+			}
 			
 				
 		</script>
@@ -173,33 +218,47 @@
 							<table border="0">
 								<thead>
 									<tr>
-										<th><input type="checkbox" /></th>
-										<th>ID</th>
-										<th>DESCRICAO</th>										
+										<th>DESCRIÇÃO</th>										
 										<th>PREÇO</th>								
 										<th class="opcoes">OPÇÕES</th>
 									</tr>
 								</thead>							
 								<tbody>
-									<?php foreach($contas as $c => $linha){
+									<!-- LISTAGEM DE PRATOS ASSOCIADOS A CONTA -->
+									<?php foreach($pratos_conta as $c => $linha){
 										if($c%2==0) {?>
-									<tr>
-										<td><input type="checkbox" /></td>
-										<td></td>								
-										<td></td>										
-										<td></td>
+									<tr>						
+										<td><?=$linha['nome']?></td>								
+										<td><?=$linha['custo_preparo']?></td>
 										<td>											
-											<a href="javascript:deleta_conta(<?=$linha['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
+											<a href="javascript:deleta_item(<?=$linha['id']?>);" ><img src="public/img/remove.png" alt="" title="Remover" width="16" height="16" />
 										</td>
 									</tr>
 									<?php } else { ?>
-									<tr class="impar">
-									<td><input type="checkbox" /></td>
-										<td></td>										
-										<td></td>									
-										<td></td>
+									<tr class="impar">						
+										<td><?=$linha['nome']?></td>								
+										<td><?=$linha['custo_preparo']?></td>
 										<td>
-											<a href="javascript:deleta_conta(<?=$linha['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
+											<a href="javascript:deleta_item(<?=$linha['id']?>);" ><img src="public/img/remove.png" alt="" title="Remover" width="16" height="16" />
+										</td>
+									</tr>
+									<? } } ?>
+									<!-- LISTAGEM DE PRODUTOS ASSOCIADOS A CONTA -->
+									<?php foreach($produtos_conta as $c => $linha){
+										if($c%2==0) {?>
+									<tr>							
+										<td><?=$linha['descricao']?></td>								
+										<td><?=$linha['valor_unidade']?></td>
+										<td>											
+											<a href="javascript:deleta_item(<?=$linha['id']?>);" ><img src="public/img/remove.png" alt="" title="Remover" width="16" height="16" />
+										</td>
+									</tr>
+									<?php } else { ?>
+									<tr class="impar">							
+										<td><?=$linha['descricao']?></td>								
+										<td><?=$linha['valor_unidade']?></td>
+										<td>
+											<a href="javascript:deleta_item(<?=$linha['id']?>);" ><img src="public/img/remove.png" alt="" title="Remover" width="16" height="16" />
 										</td>
 									</tr>
 									<? } } ?>

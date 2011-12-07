@@ -93,7 +93,6 @@
 							<table border="0">
 								<thead>
 									<tr>
-										<th>ID</th>
 										<th>NOME</th>
 										<th>Valor Unit</th>
 										<th>Fornecedor</th>
@@ -104,7 +103,6 @@
 								<?php foreach($produtos as $p => $produto){
 										if($p%2==0) { 	?>
 									<tr>
-										<td><?=$produto['id']?></td> 
 										<td><?=$produto['descricao']?></td>
 										<td><?=$produto['valor_unidade']?></td>
 										<td><?=$produto['fornecedor']?></td>
@@ -115,7 +113,6 @@
 									</tr>
 									<?php } else { ?>
 									<tr class="impar">
-										<td><?=$produto['id']?></td> 
 										<td><?=$produto['descricao']?></td>
 										<td><?=$produto['valor_unidade']?></td>										
 										<td><?=$produto['fornecedor']?></td>										

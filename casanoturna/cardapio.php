@@ -122,8 +122,6 @@
 							<table border="0">
 								<thead>
 									<tr>
-										<th><input type="checkbox" /></th>
-										<th>ID</th>
 										<th>NOME</th>										
 										<th class="opcoes">OPÇÕES</th>
 									</tr>
@@ -132,8 +130,6 @@
 									<?php foreach($cardapios as $c => $linha){
 										if($c%2==0) {?>
 									<tr>
-										<td><input type="checkbox" /></td> 
-										<td><?=$linha['id']?></td>
 										<td><?=$linha['descricao']?></td>
 										<td>
 											<a href="cardapio_form.php?i=<?=$linha['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
@@ -143,10 +139,7 @@
 									</tr>
 									<?php } else { ?>
 									<tr class="impar">
-										<td><input type="checkbox" /></td>
-										<td><?=$linha['id']?></td>
-										<td><?=$linha['descricao']?></td>
-										
+										<td><?=$linha['descricao']?></td>										
 										<td>
 											<a href="cardapio_form.php?i=<?=$linha['id']?>"><img src="public/img/icon_editar.png" alt="" title="Editar" width="16" height="16" />
 											<a href="#"><img src="public/img/icon_log.png" alt="" title="Ver" width="16" height="16" />

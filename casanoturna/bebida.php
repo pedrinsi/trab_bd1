@@ -128,8 +128,6 @@
 							<table border="0">
 								<thead>
 									<tr>
-										<th><input type="checkbox" /></th>
-										<th>ID</th>
 										<th>NOME</th>	
 										<th>VALOR</th>
 										<th>CLASSIFICAÇÃO</th>										
@@ -140,8 +138,6 @@
 									<?php foreach($bebidas as $c => $linha){
 										if($c%2==0) {?>
 									<tr>
-										<td><input type="checkbox" /></td> 
-										<td><?=$linha['id']?></td>
 										<td><?=$linha['descricao']?></td>
 										<td><?=$linha['valor_unidade']?></td>
 										<td><?=$linha['classificacao']?></td>
@@ -152,8 +148,6 @@
 									</tr>
 									<?php } else { ?>
 									<tr class="impar">
-										<td><input type="checkbox" /></td>
-										<td><?=$linha['id']?></td>
 										<td><?=$linha['descricao']?></td>
 										<td><?=$linha['valor_unidade']?></td>
 										<td><?=$linha['classificacao']?></td>										

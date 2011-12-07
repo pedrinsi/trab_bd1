@@ -122,8 +122,6 @@
 							<table border="0">
 								<thead>
 									<tr>
-										<th><input type="checkbox" /></th>
-										<th>ID</th>
 										<th>DESCRICAO</th>										
 										<th>FORNECEDOR</th>
 										<th class="opcoes">OPÇÕES</th>
@@ -133,8 +131,6 @@
 									<?php foreach($lotes as $c => $linha){
 										if($c%2==0) {?>
 									<tr>
-										<td><input type="checkbox" /></td>
-										<td><?=$linha['id']?></td>
 										<td><?=$linha['descricao']?></td>
 										<td><?=$linha['fornecedor']?></td>
 										<td>
@@ -144,8 +140,6 @@
 									</tr>
 									<?php } else { ?>
 									<tr class="impar">
-									<td><input type="checkbox" /></td>
-										<td><?=$linha['id']?></td>
 										<td><?=$linha['descricao']?></td>
 										<td><?=$linha['fornecedor']?></td>
 										<td>

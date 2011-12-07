@@ -159,8 +159,6 @@
 							<table border="0">
 								<thead>
 									<tr>
-										<th><input type="checkbox" /></th>
-										<th>ID</th>
 										<th>CLIENTE</th>										
 										<th>MESA</th>
 										<th>SITUAÇÃO</th>
@@ -172,8 +170,6 @@
 									<?php foreach($contas as $c => $linha){
 										if($c%2==0) {?>
 									<tr>
-										<td><input type="checkbox" /></td>
-										<td><?=$linha['id']?></td>
 										<td><?if($linha['nome'] == null){
 											?>
 											<span >Anonymous</span>	
@@ -197,13 +193,11 @@
 										<td>
 											
 											<a href="conta_view.php?filter=-1&i=<?=$linha['id']?>" ><img src="public/img/icone-Informacao.png" alt="" title="Inf." width="16" height="16" />
-											<a href="javascript:deleta_conta(<?=$linha['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
+											<a href="javascript:deleta_conta(<?=$linha['id']?>);" ><img src="public/img/remove.png" alt="" title="Remover" width="16" height="16" />
 										</td>
 									</tr>
 									<?php } else { ?>
 									<tr class="impar">
-									<td><input type="checkbox" /></td>
-										<td><?=$linha['id']?></td>
 										<td><?if($linha['nome'] == null){
 											?>
 											<span >Anonymous</span>	
@@ -227,7 +221,7 @@
 										<td><?=$linha['descricao']?></td>
 										<td>
 											<a href="conta_view.php?filter=-1&i=<?=$linha['id']?>" ><img src="public/img/icone-Informacao.png" alt="" title="Inf." width="16" height="16" />
-											<a href="javascript:deleta_conta(<?=$linha['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
+											<a href="javascript:deleta_conta(<?=$linha['id']?>);" ><img src="public/img/remove.png" alt="" title="Remover" width="16" height="16" />
 									</td>
 									</tr>
 									<? } } ?>

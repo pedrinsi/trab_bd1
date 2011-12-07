@@ -1,3 +1,39 @@
+<?php
+	include("public/lib/_conexao.php");
+	
+	$conexao = new Conexao;
+	$conexao->open();
+	
+	$bebidas = $conexao->result("
+		SELECT DISTINCT
+			a.valor_unidade,
+			a.descricao
+		FROM produto as a
+		INNER JOIN comercializacao_direta as b on b.id_produto = a.id
+		INNER JOIN bebida as c on c.id_comercializacao_direta = b.id
+		INNER JOIN cardapios_comercializacao_direta as d on b.id = c.id_comercializacao_direta
+		WHERE d.id_cardapio = 16
+	");
+	
+	$comidas = $conexao->result("
+		SELECT DISTINCT
+			a.valor_unidade,
+			a.descricao
+		FROM produto as a
+		INNER JOIN comercializacao_direta as b on b.id_produto = a.id
+		INNER JOIN cardapios_comercializacao_direta as c on c.id_comercializacao_direta = b.id
+		WHERE c.id_cardapio = 16 AND b.id NOT IN ( SELECT id_comercializacao_direta from bebida )
+	");
+	
+	$pratos = $conexao->result("
+		SELECT DISTINCT
+			a.nome,
+			a.custo_preparo
+		FROM prato as a
+		INNER JOIN cardapios_pratos as b on b.id_prato = a.id
+		WHERE b.id_cardapio = 16
+	");
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -56,18 +92,28 @@
 						velit nec ultrices consequat, eros sem mollis tellus, ut pellentesque urna mauris et turpis.
 					</div>
 					<div class="teste">
-						<h1>Cardapio Semanal - Delavuu</h1>
-						<h2>BEBIDAS</h2>
-						<dl>
-							<dt>Nome da Bebida</dt>
-							<dd class="price">Valor</dd>
-						</dl>
+						<h1 style="text-align:center;">Cardapio Semanal - Delavuu</h1>
+						<h2>BEBIDAS</h2>						
+							<?php foreach($bebidas as $b => $bebida){ ?>
+							<dl>
+								<dt><?=$bebida['descricao']?></dt>
+								<dd class="price">R$: <?=$bebida['valor_unidade']?></dd>
+							</dl>
+							<? } ?>
+						
 						<h2>COMIDAS</h2>
-						<dl>
-							<dt>Nome do prato</dt>
-							<dd class="price">Valor</dd>
-							<dd class="ingredients">Descrição dos ingredientes</dd>
-						</dl>
+						<?php foreach($comidas as $c => $comida){ ?>
+							<dl>
+								<dt><?=$comida['descricao']?></dt>
+								<dd class="price">R$: <?=$comida['valor_unidade']?></dd>
+							</dl>
+							<? } ?>
+							<?php foreach($pratos as $p => $prato){ ?>
+							<dl>
+								<dt><?=$prato['nome']?></dt>
+								<dd class="price">R$: <?=$prato['custo_preparo']?></dd>
+							</dl>
+							<? } ?>
 					</div>
 				</div>
 			</div>
