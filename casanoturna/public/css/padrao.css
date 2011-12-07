@@ -126,8 +126,7 @@ body {
 }
 
 .campo_botoes a {
-	background: none repeat scroll 0 0 #550b70;
-	background: url(../img/lista.png);
+	background: none repeat scroll 0 0 #5b0c80;
     color: #FFFFFF;
     display: inline-block;
     float: right;

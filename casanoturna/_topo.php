@@ -12,7 +12,7 @@
 				<ul class="submenu">
 					<li><a href="cardapio.php">Cardápio</a></li>
 					<li><a href="bebida.php">Bebidas</a></li>
-					<li><a href="comida.php">Comidas</a></li>
+					<li><a href="prato.php">Pratos</a></li>
 					<li><a href="mesa.php">Mesas</a></li>
 				</ul>
 			</li>
@@ -25,7 +25,7 @@
 				</ul>
 			</li>
 			<li><a href="cliente.php">Clientes</a></li>
-			<li><a href="conta.php">Conta</a>
+			<li><a href="#">Conta</a>
 				<ul class="submenu">
 					
 					<li><a href="conta_manutencao.php?filter=-1">Manutenção</a></li>
@@ -35,8 +35,14 @@
 			<li>
 				<a href="#">Estoque</a>
 				<ul class="submenu">
-					<li><a href="produto.php">Produto</a></li>
 					<li><a href="lote.php">Lote</a></li>
+					<li><a href="produto.php">Produto</a></li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">Promoções</a>
+				<ul class="submenu">
+					<li><a href="#">Working</a></li>
 				</ul>
 			</li>
 		</ul>

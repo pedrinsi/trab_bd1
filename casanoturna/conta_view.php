@@ -154,7 +154,7 @@
 							</fieldset>
 						</form>
 						<?if($conta['situacao']==1){?>	
-						<a href="#">Inserir Item</a>
+						<a href="conta_inserir_itens.php?c=<?=$conta['id']?>">Inserir Item</a>
 						<a href="javascript:encerra_conta(<?=$conta['id']?>,<?=$conta['valor_total']?>);" >Encerrar Conta</a>
 						<?}?>
 					</div>
@@ -162,7 +162,10 @@
 						<div>Cliente : <?=$conta['nome']?></div>
 						<div>Mesa : <?=$conta['tema']?></div>
 						<div>Valor Total :<?=$conta['valor_total']?></div>
+						
 					</div>
+					<br />
+						<br />
 					
 		
 					<form action="">
@@ -186,7 +189,6 @@
 										<td></td>										
 										<td></td>
 										<td>											
-											<a href="conta_view.php?i=(<?=$linha['id']?>);" ><img src="public/img/icone-Informacao.png" alt="" title="Inf." width="16" height="16" />
 											<a href="javascript:deleta_conta(<?=$linha['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
 										</td>
 									</tr>
@@ -197,7 +199,6 @@
 										<td></td>									
 										<td></td>
 										<td>
-											<a href="conta_view.php?i=(<?=$linha['id']?>);" ><img src="public/img/icone-Informacao.png" alt="" title="Inf." width="16" height="16" />
 											<a href="javascript:deleta_conta(<?=$linha['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
 										</td>
 									</tr>

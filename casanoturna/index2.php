@@ -14,7 +14,6 @@
 		
 		<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" type="text/css" href="public/css/padrao.css" />
-		<link rel="stylesheet" type="text/css" href="public/css/home.css" />
 		<link rel="stylesheet" type="text/css" href="public/css/cardapio.css" />
 		
 		<script type="text/javascript" src="public/js/jquery-1.7.min.js"></script>
@@ -48,28 +47,19 @@
 			</div>		
 			<div class="conteudo">
 				<div class="campo_conteudo">
-					<div class="texto">
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin quam odio, egestas at placerat vel, 
-						adipiscing sit amet tortor. In eu libero purus, non eleifend purus. Nunc lobortis, massa et condimentum placerat, odio nisl scelerisque ante, 
-						id pretium ligula quam vel sapien. Donec dignissim, felis eu lobortis fringilla, lectus ligula feugiat dui, a vehicula lectus nulla sit amet sem. 
-						Nulla facilisi. Duis tempor blandit mollis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Pellentesque congue, 
-						velit nec ultrices consequat, eros sem mollis tellus, ut pellentesque urna mauris et turpis.
-					</div>
-					<div class="teste">
-						<h1>Cardapio Semanal - Delavuu</h1>
-						<h2>BEBIDAS</h2>
-						<dl>
-							<dt>Nome da Bebida</dt>
-							<dd class="price">Valor</dd>
-						</dl>
-						<h2>COMIDAS</h2>
-						<dl>
-							<dt>Nome do prato</dt>
-							<dd class="price">Valor</dd>
-							<dd class="ingredients">Descrição dos ingredientes</dd>
-						</dl>
-					</div>
-				</div>
+					<h1>Cardapio Semanal - Delavuu</h1>
+					<h2>BEBIDAS</h2>
+					<dl>
+						<dt>Nome da Bebida</dt>
+						<dd class="price">Valor</dd>
+					</dl>
+					<h2>COMIDAS</h2>
+					<dl>
+						<dt>Nome do prato</dt>
+						<dd class="price">Valor</dd>
+						<dd class="ingredients">Descrição dos ingredientes</dd>
+					</dl>
+				</div>				
 			</div>
 		</div>
 		

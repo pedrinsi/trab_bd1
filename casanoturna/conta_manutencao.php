@@ -196,7 +196,7 @@
 										<td><?=$linha['descricao']?></td>
 										<td>
 											
-											<a href="conta_view.php?filter=-1&i=(<?=$linha['id']?>);" ><img src="public/img/icone-Informacao.png" alt="" title="Inf." width="16" height="16" />
+											<a href="conta_view.php?filter=-1&i=<?=$linha['id']?>" ><img src="public/img/icone-Informacao.png" alt="" title="Inf." width="16" height="16" />
 											<a href="javascript:deleta_conta(<?=$linha['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
 										</td>
 									</tr>
@@ -226,7 +226,7 @@
 										</td>
 										<td><?=$linha['descricao']?></td>
 										<td>
-											<a href="conta_view.php?filter=-1&i=(<?=$linha['id']?>);" ><img src="public/img/icone-Informacao.png" alt="" title="Inf." width="16" height="16" />
+											<a href="conta_view.php?filter=-1&i=<?=$linha['id']?>" ><img src="public/img/icone-Informacao.png" alt="" title="Inf." width="16" height="16" />
 											<a href="javascript:deleta_conta(<?=$linha['id']?>);" ><img src="public/img/icon_deletar.png" alt="" title="Remover" width="16" height="16" />
 									</td>
 									</tr>

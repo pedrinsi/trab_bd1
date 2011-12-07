@@ -27,10 +27,11 @@
 	$manipula->execManipula();
 	
 	$clientes = $conexao->result("
-		SELECT 
-			id,
-			nome
-		FROM cliente
+		SELECT
+			a.id,
+			a.nome
+		FROM cliente as a
+		WHERE a.id <> 0 AND a.id NOT IN (SELECT id_cliente from conta WHERE situacao = 1 )
 	");
 	
 	$mesas = $conexao->result("
@@ -38,8 +39,7 @@
 			a.id,
 			a.tema
 		FROM mesa as a
-		INNER JOIN conta b ON b.id_mesa = a.id
-		WHERE b.situacao = 0
+		WHERE a.id NOT IN (SELECT id_mesa FROM conta WHERE situacao = 1)
 	");
 	
 	$conexao->close();
@@ -119,8 +119,8 @@
 							
 							<label for="id_cliente">Cliente</label>
 							<select name="id_cliente"  style="width:150px;" onChange="selecCliente(this.value);" >
-								
-								<?foreach($clientes as $i => $linha) {?>	
+								<option value="0" >Anonymous</option>
+								<?foreach($clientes as $i => $linha) {?>								
 								<option value="<?=$linha['id']?>" ><?=$linha['nome']?></option>
 								<?}?>
 							</select>
@@ -137,7 +137,7 @@
 							<input class="nome" type="text" name="dt_abertura" value="<?=$manipula->getValorCampo("dt_abertura")?>"/>
 							
 							<div id="teste">
-								<label for="descricao">Descrição</label>
+								<label for="descricao">DescriÃ§Ã£o</label>
 								<input class="descricao" type="text" name="descricao" value="<?=$manipula->getValorCampo("descricao")?>"/>
 							</div>
 							

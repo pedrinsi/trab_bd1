@@ -1,0 +1,22 @@
+#Corpo .conteudo .campo_conteudo .texto {
+    background: none repeat scroll 0 0 #ECECEC;
+    border: 1px solid #D2D2D2;
+    color: #606060;
+    float: left;
+    font-size: 14px;
+    padding: 10px;
+    width: 280px;
+	margin-top: 31px;
+}
+#Corpo .conteudo .campo_conteudo .texto a {
+    color: #606060;
+}
+#Corpo .conteudo .campo_conteudo .texto a:hover {
+    text-decoration: underline;
+}
+
+#Corpo .conteudo .campo_conteudo .teste {
+    float: right;
+    text-align: justify;
+    width: 550px;
+}
