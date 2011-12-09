@@ -33,8 +33,8 @@
 	<meta name="language" content="pt-br" />
 	<meta name="revisit-after" content="7 days" />
 	<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type="text/css" href="public/css/formulario.css" />
 	<link rel="stylesheet" type="text/css" href="public/css/padrao.css" />
-	<link rel="stylesheet" type="text/css" href="public/css/cardapio.css" />
 	
 	<script type="text/javascript" src="public/js/jquery-1.7.min.js"></script>
 	<script type="text/javascript" src="public/js/superfish.js"></script>
@@ -42,6 +42,16 @@
 	
 	<script type="text/javascript">
 	$(document).ready (function(){
+		$(".externo").attr("target","_blank");
+				
+		$('ul.sf-menu').superfish({
+			delay:       0,                             // one second delay on mouseout 
+			animation:   {opacity:'show',height:'show'},  // fade-in and slide-down animation 
+			speed:       'normal',                          // faster animation speed 
+			autoArrows:  false,                           // disable generation of arrow mark-up 
+			dropShadows: false                            // disable drop shadows 
+		});
+		
 		$('.remover').hide();
 	
 		$('.add_mp').click(function(){
@@ -121,7 +131,7 @@
 <?php include("_topo.php"); ?>
 <!-- CONTEUDO -->
 
-<div id="Corpo" style="background: none repeat scroll 0 0 white;">
+<div id="Corpo">
 	<div class="banner_secundario">
 		<img src="public/img/casa noturna.jpg" alt="" width="900" height="180" />
 	</div>	
@@ -147,7 +157,7 @@
 			
 			<br />
 			<h3 style="color:red;"><B>Detalhes do prato:</B></h3>
-			<form action="" method="post">
+			<form action="prato_save.php" method="post">
 			
 				<div class="info_prato">
 				
@@ -168,16 +178,16 @@
 				
 					<?php foreach ($materias_primas as $j => $materia) { ?>
 					
-						<div class="<?php echo $materia['id']; ?> remover">
-							<input class="mp_id" type="hidden" name="id_materia_prima" value="<?php echo $materia['id']; ?>"/>
-							<span><?php echo $materia['descricao']; ?></span>
-							<span>Valor unitário:</span>
-							<span class="valor_unidade"><?php echo $materia['valor_unidade']; ?></span>
-							<span>Estoque:</span>
-							<span class="estoque"><?php echo $materia['estoque']; ?></span>
-							<label for="quantidade">Quantidade em <?php echo $materia['unidade_medida']; ?>:</label>
-							<input class="quantidade" type="text" name="quantidade_utilizada" rel="1" value="1"/>
-							<button class="esconde" style="color:blue;">X</button> <br />
+						<div class="<?php echo $materia['id']; ?> remover" style="height: 50px;">
+							<input class="mp_id" type="hidden" name="materias_primas[<?php echo $j; ?>][id_materia_prima]" value="<?php echo $materia['id']; ?>"/>
+							<span style="width: 222px; position: absolute;"><B><?php echo $materia['descricao']; ?></B></span>
+							<span style="width: 100px; position: absolute; margin-left: 226px;">Valor unitário:</span>
+							<span class="valor_unidade" style="width: 100px; position: absolute; margin-left: 326px;"><?php echo $materia['valor_unidade']; ?></span>
+							<span style="width: 60px; position: absolute; margin-left: 427px;">Estoque:</span>
+							<span class="estoque" style="width: 50px;; position: absolute; margin-left: 490px;"><?php echo $materia['estoque']; ?></span>
+							<label for="quantidade" style="position: absolute; margin-left: 551px; width: 200px;">Quantidade em <?php echo $materia['unidade_medida']; ?>:</label>
+							<input class="quantidade" type="text" name="materias_primas[<?php echo $j; ?>][quantidade_utilizada]" rel="1" value="1" style="position: absolute; margin-left: 751px;"/>
+							<button class="esconde" style="color:blue; position: absolute; margin-left: 1024px;">X</button> <br />
 						</div>
 					
 					<?php } ?>
